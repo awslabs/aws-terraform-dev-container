@@ -22,15 +22,15 @@ screenshots:
     url: doc/images/screenshot-4.png
 
 usage: |
-  1. Clone, or download this project
-  2. Copy the directory `.devcontainer` and paste it at the root path of your project.
-  4. Open the [command pallete](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette) on VS Code and select `Rebuild and Reopen in Container`
-
-  Example:
+  1. On a terminal, inside your Terraform project, execute the following:
   ```bash
-  git clone --depth=1 https://github.com/aws-samples/aws-terraform-dev-container
-  cp -r aws-terraform-dev-container/.devcontainer YOUR_PROJECT_DIRECTORY/.devcontainer
+  # Works for Mac/Linux
+  curl -sL https://raw.githubusercontent.com/awslabs/aws-terraform-dev-container/main/scripts/init.sh | bash
   ````
+  2. Open the folder with VSCode
+  3. Reopen in Container
+
+  To reopen in container manually, open the [command pallete](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette) on VS Code and select `Rebuild and Reopen in Container`
 
 prerequisites:
   - name: Docker
