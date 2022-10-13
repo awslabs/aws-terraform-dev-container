@@ -15,14 +15,15 @@ pip 22.2.2 from /usr/local/lib/python3.8/dist-packages/pip (python 3.8)
 --- TERRAFORM ---
 Terraform v1.3.2
 on linux_amd64
++ provider registry.terraform.io/hashicorp/aws v4.34.0
 --- TERRAFORM DOCS ---
 terraform-docs version v0.16.0 1f686b1 linux/amd64
 --- TERRASCAN ---
 version: v1.15.2
 --- TFLINT ---
 TFLint version 0.41.0
-+ ruleset.terraform (0.1.1-bundled)
 + ruleset.aws (0.17.1)
++ ruleset.terraform (0.1.1-bundled)
 --- TFSEC ---
 v1.28.0
 --- TFSWITCH ---
