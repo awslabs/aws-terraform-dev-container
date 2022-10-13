@@ -158,7 +158,7 @@ Available targets:
 * [VSCode Dev Container][vscode-dev-container] - The Visual Studio Code Remote - Containers extension lets you use a Docker container as a full-featured development environment.
 * [Changelog](CHANGELOG.md) - Where all notable changes to this project are documented.
 * [Code Of Conduct](CODE_OF_CONDUCT.md) - Amazon Open Source Code of Conduct
-* [License](LICENSE) - Apache License Version 2.0
+* [License](LICENSE) - MIT No Attribution
 
 
 </details>

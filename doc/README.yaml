@@ -69,7 +69,7 @@ references:
     description: Amazon Open Source Code of Conduct
     url: (CODE_OF_CONDUCT.md)
   - name: License
-    description: Apache License Version 2.0
+    description: MIT No Attribution
     url: (LICENSE)
 links:
   - name: docker
