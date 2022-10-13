@@ -80,6 +80,7 @@ To reopen in container manually, open the [command pallete](https://code.visuals
 ---
 - [Docker](https://www.docker.com/products/docker-desktop/) - The fastest way to containerize applications
 - [Visual Studio Code](https://code.visualstudio.com/) - Visual Studio Code is a code editor redefined and optimized for building and debugging modern web and cloud applications.
+- [VSCode Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) - An extension pack that lets you open any folder in a container, on a remote machine, or in WSL and take advantage of VS Code's full feature set.
 
 
 
