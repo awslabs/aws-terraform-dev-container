@@ -21,7 +21,7 @@ A VSCode Dev Container with [tools][tools] to help you build and manage AWS infr
 <!-- SCREENSHOTS -->
 
 ## Screenshots
----
+
 <details open>
   <summary>Expand</summary>
 
@@ -46,7 +46,7 @@ A VSCode Dev Container with [tools][tools] to help you build and manage AWS infr
 
 
 ## Table of Contents
----
+
 
 
  - [Usage](#usage) 
@@ -62,7 +62,7 @@ A VSCode Dev Container with [tools][tools] to help you build and manage AWS infr
 <!-- USAGE -->
 
 ## Getting started
----
+
 1. On a terminal, inside your Terraform project, execute the following on Mac, Linux or [WSL][wsl]:
 ```bash
 curl -sL https://raw.githubusercontent.com/awslabs/aws-terraform-dev-container/main/scripts/init.sh | bash
@@ -77,7 +77,7 @@ To reopen in container manually, open the [command pallete](https://code.visuals
 <!-- PREREQUISITES -->
 
 ## Prerequisites
----
+
 - [Docker](https://www.docker.com/products/docker-desktop/) - The fastest way to containerize applications
 - [Visual Studio Code](https://code.visualstudio.com/) - Visual Studio Code is a code editor redefined and optimized for building and debugging modern web and cloud applications.
 - [VSCode Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) - An extension pack that lets you open any folder in a container, on a remote machine, or in WSL and take advantage of VS Code's full feature set.
@@ -150,7 +150,7 @@ Available targets:
 <!-- REFERENCES -->
 
 ## References
----
+
 <details open>
   <summary>Expand</summary>
 
@@ -167,14 +167,14 @@ Available targets:
 <!-- LICENSE -->
 
 ## License
----
+
 This library is licensed under the MIT-0 License. See the [LICENSE][license] file.
 
 
 <!-- COPYRIGHT -->
 
 ## Copyright
----
+
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 
