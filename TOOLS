@@ -1,0 +1,30 @@
+--- AWS CLI ---
+aws-cli/2.8.1 Python/3.9.11 Linux/5.10.124-linuxkit exe/x86_64.ubuntu.20 prompt/off
+--- CHECKOV ---
+2.1.258
+--- GO ---
+go version go1.13.8 linux/amd64
+--- GOMPLATE ---
+gomplate version 3.11.3
+--- PRE-COMMIT ---
+pre-commit 2.20.0
+--- PYTHON 3 ---
+Python 3.8.10
+--- PIP ---
+pip 22.2.2 from /usr/local/lib/python3.8/dist-packages/pip (python 3.8)
+--- TERRAFORM ---
+Terraform v1.3.2
+on linux_amd64
+--- TERRAFORM DOCS ---
+terraform-docs version v0.16.0 1f686b1 linux/amd64
+--- TERRASCAN ---
+version: v1.15.2
+--- TFLINT ---
+TFLint version 0.41.0
++ ruleset.terraform (0.1.1-bundled)
++ ruleset.aws (0.17.1)
+--- TFSEC ---
+v1.28.0
+--- TFSWITCH ---
+
+Version: 0.13.1288

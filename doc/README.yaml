@@ -1,0 +1,82 @@
+---
+
+url: https://gitlab.aws.dev/proserve-labs/aws-terraform-dev-container
+
+logo: doc/logo.png
+
+name: AWS Terraform Dev Container
+description: A VSCode Dev Container with [tools][tools] to help you build and manage AWS infrastructure with Terraform
+
+screenshots:
+  - caption: Develop your project in a Docker container
+    label: screenshot-1
+    url: doc/images/screenshot-1.gif
+  - caption: Increase productivity with well-defined `Make` commands
+    label: screenshot-2
+    url: doc/images/screenshot-2.gif
+  - caption: Ensure every team member has all the tools on their correct versions
+    label: screenshot-3
+    url: doc/images/screenshot-3.gif
+  - caption: Extensions already installed for you
+    label: screenshot-4
+    url: doc/images/screenshot-4.png
+
+usage: |
+  1. Clone, or download this project
+  2. Copy the directory `.devcontainer` and paste it at the root path of your project.
+  4. Open the [command pallete](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette) on VS Code and select `Rebuild and Reopen in Container`
+
+  Example:
+  ```bash
+  git clone --depth=1 https://github.com/aws-samples/aws-terraform-dev-container
+  cp -r aws-terraform-dev-container/.devcontainer YOUR_PROJECT_DIRECTORY/.devcontainer
+  ````
+
+prerequisites:
+  - name: Docker
+    description: The fastest way to containerize applications
+    url: https://www.docker.com/products/docker-desktop/
+  - name: Visual Studio Code
+    description: Visual Studio Code is a code editor redefined and optimized for building and debugging modern web and cloud applications.
+    url: https://code.visualstudio.com/
+
+include:
+  - "Makefile.md"
+
+# tasks:
+#   - name: CHANGELOG generator
+#     description: Ease the changelong generation and maintainance
+#     status: backlog
+
+license: This library is licensed under the MIT-0 License. See the [LICENSE][license] file.
+copyright: Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+
+# explicit urls needs to be enclosed with ()
+# implicit urls needs to be enclosed with []
+references:
+  - name: Terraform by HashiCorp
+    description: Terraform is an open-source infrastructure as code software tool that enables you to safely and predictably create, change, and improve infrastructure.
+    url: [terraform]
+  - name: VSCode Dev Container
+    description: The Visual Studio Code Remote - Containers extension lets you use a Docker container as a full-featured development environment.
+    url: [vscode-dev-container]
+  - name: Changelog
+    description: Where all notable changes to this project are documented.
+    url: (CHANGELOG.md)
+  - name: Code Of Conduct
+    description: Amazon Open Source Code of Conduct
+    url: (CODE_OF_CONDUCT.md)
+  - name: License
+    description: Apache License Version 2.0
+    url: (LICENSE)
+links:
+  - name: docker
+    url: https://www.docker.com/products/docker-desktop/
+  - name: vscode-dev-container
+    url: https://code.visualstudio.com/docs/remote/containers
+  - name: terraform
+    url: https://www.terraform.io/
+  - name: license
+    url: LICENSE
+  - name: tools
+    url: TOOLS

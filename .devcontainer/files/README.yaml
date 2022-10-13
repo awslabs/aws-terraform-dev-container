@@ -1,0 +1,63 @@
+---
+
+# project
+url: https://
+
+# Logo (can be local path or remote)
+logo: doc/logo.png
+
+name: Lorem Ipsum
+description: Nam et hendrerit sem. In dictum pretium massa.
+
+# List of screenshots
+screenshots:
+  - caption: Vestibulum malesuada
+    label: vestibulum-malesuada
+    url: https://via.placeholder.com/512
+
+usage: |
+  Cras eget eros eu quam tristique tristique.
+  Nam molestie vitae ligula vel mollis.
+  ```
+  $ terraform init
+  $ terraform plan
+  $ terraform apply
+  ```
+
+prerequisites:
+  - name: Example
+    description: Cras nibh neque, tristique vitae sem quis, convallis euismod dui.
+    url: https://example.com
+
+installation: |
+  Sed semper lobortis tincidunt. Phasellus malesuada non felis ac vehicula.
+  ```
+  module "hello" "world" {}
+  ```
+
+testing: |
+  Nam dictum quam orci, rhoncus interdum tellus ultricies id.
+  ```
+  make test
+  ```
+
+deployment: |
+  Proin elementum odio sed felis feugiat, sed auctor felis consectetur.
+  ```
+  make deploy
+  ```
+
+# If you want to include other files
+# include:
+#   - "Makefile"
+
+# explicit urls needs to be enclosed with ()
+# implicit urls needs to be enclosed with []
+references:
+  - name: Terraform by HashiCorp
+    description: Terraform is an open-source infrastructure as code software tool that enables you to safely and predictably create, change, and improve infrastructure.
+    url: [terraform]
+
+links:
+  - name: terraform
+    url: https://www.terraform.io/
