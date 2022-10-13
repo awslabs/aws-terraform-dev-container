@@ -8,12 +8,12 @@ Available targets:
   checkov/version                     Display checkov version
   doc/build                           Build README.md based on doc/README.yaml (and/or doc/.terraform-docs.yml)
   doc/init                            Initialize project's documentation
-  gitignore/init                      Copy .gitignore to working directoy
+  gitignore/init                      Create a .gitignore file with most common rules
   go/install                          Install Golang
   gomplate/version                    Display Gomplate version
   go/version                          Display Go version
   help/clean                          Help screen
-  pre-commit/copy                     Copy .pre-commit-config.yaml to working directoy
+  init                                Initialize project with default configuration
   pre-commit/install-hooks            Install pre-commit hooks
   pre-commit/install                  Install pre-commit using Pip3
   pre-commit/run                      Execute pre-commit hooks on all files
@@ -28,7 +28,7 @@ Available targets:
   terraform/clean                     Remove temporary files and directories
   terraform/destroy                   Destroy Terraform-managed infrastructure.
   terraform-docs/build                Build doc/terraform-docs.md with Terraform Docs
-  terraform-docs/copy                 Copy .terraform-docs-config.yaml to working directoy
+  terraform-docs/init                 Create initl configuration
   terraform-docs/version              Display Terraform Docs version
   terraform/fmt                       Check if the input is formatted. Exit status will be 0 if all input is properly formatted and non-zero otherwise.
   terraform/init/backend              Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
@@ -38,8 +38,7 @@ Available targets:
   terraform/version                   Display Terraform version
   terrascan/run                       Run Terrascan
   terrascan/version                   Display Terrascan version
-  tflint/copy                         Copy .tflint.hcl to working directoy
-  tflint/run                          Execute tflint
+  tflint/init                         Init AWS TFLINT
   tflint/version                      Display TFLINT version
   tfsec/run                           Run TFSEC
   tfsec/version                       Display TFSEC version
