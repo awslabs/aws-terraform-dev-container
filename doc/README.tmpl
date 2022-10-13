@@ -26,7 +26,7 @@
 <!-- SCREENSHOTS -->
 {{ if has (ds "config") "screenshots" }}
 ## Screenshots
----
+
 <details open>
   <summary>Expand</summary>
 
@@ -39,7 +39,7 @@
 {{ end }}
 
 ## Table of Contents
----
+
 {{ $c := ds "config" }}
 
 {{ if has (ds "config") "usage" }}{{ $usage := $c.usage }}{{ if ne $usage "" }} - [Usage](#usage) {{end}}{{end}}
@@ -55,21 +55,21 @@
 <!-- USAGE -->
 {{ if has (ds "config") "usage" }}
 ## Getting started
----
+
 {{ (ds "config").usage }}
 {{ end }}
 
 <!-- PREREQUISITES -->
 {{ if has (ds "config") "prerequisites" }}
 ## Prerequisites
----
+
 {{ range $prerequisite := (ds "config").prerequisites }}{{ printf "- [%s](%s) - %s\n" $prerequisite.name $prerequisite.url $prerequisite.description }}{{end}}
 {{end}}
 
 <!-- INSTALLATION -->
 {{ if has (ds "config") "installation" }}
 ## Installation
----
+
 <details open>
   <summary>Expand</summary>
 
@@ -80,7 +80,7 @@
 <!-- TESTING -->
 {{ if has (ds "config") "testing" }}
 ## Testing
----
+
 <details>
   <summary>Expand</summary>
 
@@ -91,7 +91,7 @@
 <!-- DEPLOYMENT -->
 {{ if has (ds "config") "deployment" }}
 ## Deployment
----
+
 <details>
   <summary>Expand</summary>
 
@@ -109,7 +109,7 @@
 <!-- TASKS -->
 {{ if has (ds "config") "tasks" }}
 ## Tasks
----
+
 <details open>
   <summary>Collapse</summary>
 
@@ -121,7 +121,7 @@
 <!-- REFERENCES -->
 {{ if has (ds "config") "references" }}
 ## References
----
+
 <details open>
   <summary>Expand</summary>
 
@@ -133,14 +133,14 @@
 <!-- LICENSE -->
 {{ if has (ds "config") "license" }}
 ## License
----
+
 {{ (ds "config").license }}
 {{ end }}
 
 <!-- COPYRIGHT -->
 {{ if has (ds "config") "copyright" }}
 ## Copyright
----
+
 {{ (ds "config").copyright }}
 {{ end }}
 

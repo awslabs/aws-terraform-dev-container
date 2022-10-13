@@ -26,7 +26,7 @@
 <!-- SCREENSHOTS -->
 {{ if has (ds "config") "screenshots" }}
 ## Screenshots
----
+
 <details open>
   <summary>Expand</summary>
 
@@ -39,7 +39,7 @@
 {{ end }}
 
 ## Table of Contents
----
+
 {{ $c := ds "config" }}
 
 {{ if has (ds "config") "usage" }}{{ $usage := $c.usage }}{{ if ne $usage "" }} - [Usage](#usage) {{end}}{{end}}
@@ -47,38 +47,29 @@
 {{ if has (ds "config") "installation" }}{{ $installation := $c.installation }}{{ if ne $installation "" }} - [Installation](#installation) {{end}}{{end}}
 {{ if has (ds "config") "testing" }}{{ $testing := $c.testing }}{{ if ne $testing "" }} - [Testing](#testing) {{end}}{{end}}
 {{ if has (ds "config") "deployment" }}{{ $deployment := $c.deployment }}{{ if ne $deployment "" }} - [Deployment](#deployment) {{end}}{{end}}
-{{ if has (ds "config") "acknowledgments" }}{{ $acknowledgments := len $c.acknowledgments }}{{ if gt $acknowledgments 0  }} - [Acknowledgments](#acknowledgments) {{end}}{{end}}
-{{ if has (ds "config") "contributors" }}{{ $contributors := len $c.contributors }}{{ if gt $contributors 0 }} - [Contributors](#contributors) {{end}}{{end}}
+{{ if has (ds "config") "tasks" }}{{ $tasks := len $c.tasks }}{{ if gt $tasks 0 }} - [Tasks](#tasks) {{end}}{{end}}
 {{ if has (ds "config") "references" }}{{ $references := len $c.references }}{{ if gt $references 0 }} - [References](#references) {{end}}{{end}}
 {{ if has (ds "config") "license" }}{{ $license := $c.license }}{{ if ne $license "" }} - [License](#license) {{end}}{{end}}
 {{ if has (ds "config") "copyright" }}{{ $copyright := $c.copyright }}{{ if ne $copyright "" }} - [Copyright](#copyright) {{end}}{{end}}
 
 <!-- USAGE -->
 {{ if has (ds "config") "usage" }}
-## Usage
----
-<details open>
-  <summary>Expand</summary>
+## Getting started
 
 {{ (ds "config").usage }}
-</details>
 {{ end }}
 
 <!-- PREREQUISITES -->
 {{ if has (ds "config") "prerequisites" }}
 ## Prerequisites
----
-<details>
-  <summary>Expand</summary>
 
 {{ range $prerequisite := (ds "config").prerequisites }}{{ printf "- [%s](%s) - %s\n" $prerequisite.name $prerequisite.url $prerequisite.description }}{{end}}
-</details>
 {{end}}
 
 <!-- INSTALLATION -->
 {{ if has (ds "config") "installation" }}
 ## Installation
----
+
 <details open>
   <summary>Expand</summary>
 
@@ -89,7 +80,7 @@
 <!-- TESTING -->
 {{ if has (ds "config") "testing" }}
 ## Testing
----
+
 <details>
   <summary>Expand</summary>
 
@@ -100,7 +91,7 @@
 <!-- DEPLOYMENT -->
 {{ if has (ds "config") "deployment" }}
 ## Deployment
----
+
 <details>
   <summary>Expand</summary>
 
@@ -108,16 +99,29 @@
 </details>
 {{end}}
 
+<!-- INCLUDE OTHER DOCS -->
 {{ if has (ds "config") "include" }}
 {{ range $file := (datasource "config").include -}}
 {{ (include "includes" $file) }}
 {{- end }}
 {{- end }}
 
+<!-- TASKS -->
+{{ if has (ds "config") "tasks" }}
+## Tasks
+
+<details open>
+  <summary>Collapse</summary>
+
+{{ range $task := (ds "config").tasks }}{{ printf "* %s - %s - %s\n" $task.status $task.name $task.description }}{{end}}
+
+</details>
+{{end}}
+
 <!-- REFERENCES -->
 {{ if has (ds "config") "references" }}
 ## References
----
+
 <details open>
   <summary>Expand</summary>
 
@@ -126,17 +130,21 @@
 </details>
 {{end}}
 
+<!-- LICENSE -->
+{{ if has (ds "config") "license" }}
+## License
+
+{{ (ds "config").license }}
+{{ end }}
+
+<!-- COPYRIGHT -->
+{{ if has (ds "config") "copyright" }}
 ## Copyright
 
-Copyright © TBD -{{ (time.Now).UTC.Format "2006" }} [YOUR_COMPANY](https://www.yourcompany.com/)
-
-## Trademarks
-
-All other trademarks referenced herein are the property of their respective owners.
+{{ (ds "config").copyright }}
+{{ end }}
 
 <!-- LINKS -->
-[issue]: {{ (ds "config").url }}/-/issues
-[contributors]: {{ (ds "config").url }}/-/graphs/main
 {{ if has (ds "config") "links" }}
 {{ range $link := (ds "config").links }}{{ printf "[%s]: %s\n" $link.name $link.url }}{{end}}
 {{end}}
