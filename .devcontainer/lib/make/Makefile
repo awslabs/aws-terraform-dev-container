@@ -28,4 +28,4 @@ versions: \
 .PHONY: init
 ## Initialize project with default configuration
 init: pre-commit/init gitignore/init doc/init terraform-docs/init tflint/init
-	clear && figlet "AWS Terraform"
+	@clear && printf "\e[0;32mAWS Terraform Dev Container: $(shell basename $(CURDIR))\e[0m\n"
