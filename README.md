@@ -63,9 +63,8 @@ A VSCode Dev Container with [tools][tools] to help you build and manage AWS infr
 
 ## Getting started
 ---
-1. On a terminal, inside your Terraform project, execute the following:
+1. On a terminal, inside your Terraform project, execute the following on Mac, Linux or [WSL][wsl]:
 ```bash
-# Works for Mac/Linux
 curl -sL https://raw.githubusercontent.com/awslabs/aws-terraform-dev-container/main/scripts/init.sh | bash
 ````
 2. Open the folder with VSCode
@@ -185,5 +184,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 [terraform]: https://www.terraform.io/
 [license]: LICENSE
 [tools]: TOOLS
+[wsl]: https://learn.microsoft.com/en-us/windows/wsl/install
 
 

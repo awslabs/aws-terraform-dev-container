@@ -22,9 +22,8 @@ screenshots:
     url: doc/images/screenshot-4.png
 
 usage: |
-  1. On a terminal, inside your Terraform project, execute the following:
+  1. On a terminal, inside your Terraform project, execute the following on Mac, Linux or [WSL][wsl]:
   ```bash
-  # Works for Mac/Linux
   curl -sL https://raw.githubusercontent.com/awslabs/aws-terraform-dev-container/main/scripts/init.sh | bash
   ````
   2. Open the folder with VSCode
@@ -80,3 +79,5 @@ links:
     url: LICENSE
   - name: tools
     url: TOOLS
+  - name: wsl
+    url: https://learn.microsoft.com/en-us/windows/wsl/install
