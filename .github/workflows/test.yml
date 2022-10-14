@@ -7,13 +7,10 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install OS packages
-        run: sudo apt-get update && export DEBIAN_FRONTEND=noninteractive && sudo apt-get -y install --no-install-recommends \
-            bash-completion \
-            ca-certificates \
-            make \
-            python3-pip \
-            unzip \
-            wget && rm -rf /var/lib/apt/lists/*
+        run: |-
+          sudo apt-get update
+          export DEBIAN_FRONTEND=noninteractive 
+          sudo apt-get -y install --no-install-recommends bash-completion ca-certificates make python3-pip unzip wget
 
       - name: Update CA certificates
         run: sudo update-ca-certificates
