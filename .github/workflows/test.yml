@@ -6,6 +6,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install Make
+        run: apt install -y make
+
       - name: Display AWS CLI version
         run: aws/cli-version
 
