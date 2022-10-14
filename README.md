@@ -155,10 +155,11 @@ Available targets:
   <summary>Expand</summary>
 
 * [Terraform by HashiCorp][terraform] - Terraform is an open-source infrastructure as code software tool that enables you to safely and predictably create, change, and improve infrastructure.
-* [VSCode Dev Container][vscode-dev-container] - The Visual Studio Code Remote - Containers extension lets you use a Docker container as a full-featured development environment.
-* [Changelog](CHANGELOG.md) - Where all notable changes to this project are documented.
+* [Changelog](CHANGELOG.md) - All notable changes.
 * [Code Of Conduct](CODE_OF_CONDUCT.md) - Amazon Open Source Code of Conduct
+* [Contributing](CONTRIBUTING.md) - Learn how to contribute
 * [License](LICENSE) - MIT No Attribution
+* [GNU Make](https://www.gnu.org/software/make/manual/make.html) - If you are new to make, or are looking for a general introduction.
 
 
 </details>
