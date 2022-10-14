@@ -10,124 +10,124 @@ jobs:
         run: sudo apt install -y make
 
       - name: Display AWS CLI version
-        run: aws/cli-version
+        run: make aws/cli-version
 
       - name: Run Checkov
-        run: checkov/run
+        run: make checkov/run
 
       - name: Display checkov version
-        run: checkov/version
+        run: make checkov/version
 
       - name: Build README.md based on doc/README.yaml (and/or doc/.terraform-docs.yml)
-        run: doc/build
+        run: make doc/build
 
       - name: Initialize project's documentation
-        run: doc/init
+        run: make doc/init
 
       - name: Create a .gitignore file with most common rules
-        run: gitignore/init
+        run: make gitignore/init
 
       - name: Install Golang
-        run: go/install
+        run: make go/install
 
       - name: Display Gomplate version
-        run: gomplate/version
+        run: make gomplate/version
 
       - name: Display Go version
-        run: go/version
+        run: make go/version
 
       - name: Help screen
-        run: help/clean
+        run: make help/clean
 
       - name: Initialize project with default configuration
-        run: init
+        run: make init
 
       - name: Install pre-commit hooks
-        run: pre-commit/install-hooks
+        run: make pre-commit/install-hooks
 
       - name: Install pre-commit using Pip3
-        run: pre-commit/install
+        run: make pre-commit/install
 
       - name: Execute pre-commit hooks on all files
-        run: pre-commit/run
+        run: make pre-commit/run
 
       - name:  Update pre-commit-config.yml with the latest version
-        run: pre-commit/update
+        run: make pre-commit/update
 
       - name: Display pre-commit version
-        run: pre-commit/version
+        run: make pre-commit/version
 
       - name: Install Python 3
-        run: python/install
+        run: make python/install
 
       - name: Install Python 3 Pip
-        run: python/pip-install
+        run: make python/pip-install
 
       - name: Display Python & Pip version
-        run: python/version
+        run: make python/version
 
       - name: Create a Python 3 virtualenv in the current directory
-        run: python/virtualenv-create
+        run: make python/virtualenv-create
 
       - name: Install Python 3 virtualenv
-        run: python/virtualenv
+        run: make python/virtualenv
 
       - name: Builds or changes infrastructure according to Terraform configuration files in DIR
-        run: terraform/apply
+        run: make terraform/apply
 
       - name: Remove temporary files and directories
-        run: terraform/clean
+        run: make terraform/clean
 
       - name: Destroy Terraform-managed infrastructure.
-        run: terraform/destroy
+        run: make terraform/destroy
 
       - name: Build doc/terraform-docs.md with Terraform Docs
-        run: terraform-docs/build
+        run: make terraform-docs/build
 
       - name: Create initl configuration
-        run: terraform-docs/init
+        run: make terraform-docs/init
 
       - name: Display Terraform Docs version
-        run: terraform-docs/version
+        run: make terraform-docs/version
 
       - name: Check if the input is formatted. Exit status will be 0 if all input is properly formatted and non-zero otherwise.
-        run: terraform/fmt
+        run: make terraform/fmt
 
       - name: Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-        run: terraform/init/backend
+        run: make terraform/init/backend
 
       - name: Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-        run: terraform/init
+        run: make terraform/init
 
       - name: Generates an execution plan for Terraform
-        run: terraform/plan
+        run: make terraform/plan
 
       - name: Validate the configuration files in a directory, referring only to the configuration and not accessing any remote services such as remote state, provider APIs, etc.
-        run: terraform/validate
+        run: make terraform/validate
 
       - name: Display Terraform version
-        run: terraform/version
+        run: make terraform/version
 
       - name: Run Terrascan
-        run: terrascan/run
+        run: make terrascan/run
 
       - name: Display Terrascan version
-        run: terrascan/version
+        run: make terrascan/version
 
       - name: Init AWS TFLINT
-        run: tflint/init
+        run: make tflint/init
 
       - name: Display TFLINT version
-        run: tflint/version
+        run: make tflint/version
 
       - name: Run TFSEC
-        run: tfsec/run
+        run: make tfsec/run
 
       - name: Display TFSEC version
-        run: tfsec/version
+        run: make tfsec/version
 
       - name: Execute tfswitch
-        run: tfswitch/run
+        run: make tfswitch/run
 
       - name: Display tfswitch version
-        run: tfswitch/version
+        run: make tfswitch/version
