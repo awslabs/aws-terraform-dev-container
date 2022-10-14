@@ -1,10 +1,33 @@
 name: Test Make targets
 on: [push]
 jobs:
-  linux-build:
-    runs-on: ubuntu-latest
+  linux:
+    runs-on: FROM mcr.microsoft.com/vscode/devcontainers/base:0-jammy
     steps:
       - uses: actions/checkout@v2
+
+      - name: Install OS packages
+        run: sudo apt-get update && export DEBIAN_FRONTEND=noninteractive && apt-get -y install --no-install-recommends \
+            ca-certificates \
+            curl \
+            expect \
+            figlet \
+            gawk \
+            git \
+            git-flow \
+            golang \
+            gnupg \
+            jq \
+            less \
+            make \
+            python3-pip \
+            software-properties-common \
+            ssh \
+            tree \
+            bash-completion \
+            unzip \
+            vim \
+            wget && rm -rf /var/lib/apt/lists/*
 
       - name: Install Make
         run: sudo apt install -y make
