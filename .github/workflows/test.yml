@@ -1,4 +1,3 @@
-name: Test Make targets
 name: Docker Image CI
 
 on:
