@@ -72,7 +72,7 @@ references:
     description: MIT No Attribution
     url: (LICENSE)
   - name: GNU Make
-    description: If you are new to make, or are looking for a general introduction. 
+    description: If you are new to make, or are looking for a general introduction.
     url: (https://www.gnu.org/software/make/manual/make.html)
 
 links:

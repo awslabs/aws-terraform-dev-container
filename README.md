@@ -49,15 +49,15 @@ A VSCode Dev Container with [tools][tools] to help you build and manage AWS infr
 
 
 
- - [Usage](#usage) 
- - [Prerequisites](#prerequisites) 
+ - [Usage](#usage)
+ - [Prerequisites](#prerequisites)
 
 
 
 
- - [References](#references) 
- - [License](#license) 
- - [Copyright](#copyright) 
+ - [References](#references)
+ - [License](#license)
+ - [Copyright](#copyright)
 
 <!-- USAGE -->
 
@@ -187,5 +187,3 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 [license]: LICENSE
 [tools]: TOOLS
 [wsl]: https://learn.microsoft.com/en-us/windows/wsl/install
-
-
