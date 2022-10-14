@@ -8,10 +8,15 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build Docker image
-        uses: ./
+        uses: './.github/actions/docker-image-build.yml'
         id: image
         with:
-          who-to-greet: 'Mona the Octocat'
+          VARIANT: "ubuntu-20.04"
+          GOMPLATE_VERSION: "3.11.3"
+          TERRAFORM_DOCS_VERSION: "0.16.0"
+          TFLINT_AWS_RULESET_VERSION: "0.17.1"
+          TFSEC_VERSION: "1.28.0"
+          TERRASCAN_VERSION: "1.15.2"
 
       # - name: Display AWS CLI version
       #   run: make aws/cli-version
