@@ -7,26 +7,12 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install OS packages
-        run: sudo apt-get update && export DEBIAN_FRONTEND=noninteractive && apt-get -y install --no-install-recommends \
+        run: sudo apt-get update && export DEBIAN_FRONTEND=noninteractive && sudo apt-get -y install --no-install-recommends \
+            bash-completion \
             ca-certificates \
-            curl \
-            expect \
-            figlet \
-            gawk \
-            git \
-            git-flow \
-            golang \
-            gnupg \
-            jq \
-            less \
             make \
             python3-pip \
-            software-properties-common \
-            ssh \
-            tree \
-            bash-completion \
             unzip \
-            vim \
             wget && rm -rf /var/lib/apt/lists/*
 
       - name: Update CA certificates
