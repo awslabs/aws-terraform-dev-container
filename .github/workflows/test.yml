@@ -2,7 +2,7 @@ name: Test Make targets
 on: [push]
 jobs:
   linux:
-    runs-on: FROM mcr.microsoft.com/vscode/devcontainers/base:0-jammy
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
@@ -29,8 +29,8 @@ jobs:
             vim \
             wget && rm -rf /var/lib/apt/lists/*
 
-      - name: Install Make
-        run: sudo apt install -y make
+      - name: Update CA certificates
+        run: sudo update-ca-certificates
 
       - name: Display AWS CLI version
         run: make aws/cli-version
