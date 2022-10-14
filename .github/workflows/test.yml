@@ -1,22 +1,19 @@
 name: Test Make targets
-on: [push]
-jobs:
-  linux:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+name: Docker Image CI
 
-      - name: Build Docker image
-        uses: '.github/actions/docker-image-build.yml'
-        id: image
-        with:
-          VARIANT: "ubuntu-20.04"
-          GOMPLATE_VERSION: "3.11.3"
-          TERRAFORM_DOCS_VERSION: "0.16.0"
-          TFLINT_AWS_RULESET_VERSION: "0.17.1"
-          TFSEC_VERSION: "1.28.0"
-          TERRASCAN_VERSION: "1.15.2"
+on:
+  push:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file .devcontainer/Dockerfile --tag aws-terraform-dev-container:$(date +%s)
 
       # - name: Display AWS CLI version
       #   run: make aws/cli-version
