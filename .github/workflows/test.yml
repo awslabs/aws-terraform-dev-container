@@ -10,12 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: cd .devcontainer && docker build . --file Dockerfile --tag aws-terraform-dev-container:$(date +%s)
+    - name: Checkout
+      uses: actions/checkout@v3
 
-      # - name: Display AWS CLI version
-      #   run: make aws/cli-version
+    - name: Build the Docker image
+      run: cd .devcontainer && docker build . --file Dockerfile --tag aws-terraform-dev-container:${{ github.run_id }}
+
+  run:
+    runs-on: aws-terraform-dev-container:${{ github.run_id }}
+    steps:
+    - name: Display AWS CLI version
+      run: make aws/cli-version
 
       # - name: Run Checkov
       #   run: make checkov/run
