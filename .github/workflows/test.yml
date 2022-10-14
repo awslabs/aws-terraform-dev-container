@@ -6,134 +6,131 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install OS packages
-        run: |-
-          sudo apt-get update
-          export DEBIAN_FRONTEND=noninteractive 
-          sudo apt-get -y install --no-install-recommends bash-completion ca-certificates make python3-pip unzip wget
+      - name: Build Docker image
+        uses: ./.github/action.yml
+        id: docker-build
+        with:
+          who-to-greet: 'Mona the Octocat'
 
-      - name: Update CA certificates
-        run: sudo update-ca-certificates
+      # - name: Display AWS CLI version
+      #   run: make aws/cli-version
 
-      - name: Display AWS CLI version
-        run: make aws/cli-version
+      # - name: Run Checkov
+      #   run: make checkov/run
 
-      - name: Run Checkov
-        run: make checkov/run
+      # - name: Display checkov version
+      #   run: make checkov/version
 
-      - name: Display checkov version
-        run: make checkov/version
+      # - name: Build README.md based on doc/README.yaml (and/or doc/.terraform-docs.yml)
+      #   run: make doc/build
 
-      - name: Build README.md based on doc/README.yaml (and/or doc/.terraform-docs.yml)
-        run: make doc/build
+      # - name: Initialize project's documentation
+      #   run: make doc/init
 
-      - name: Initialize project's documentation
-        run: make doc/init
+      # - name: Create a .gitignore file with most common rules
+      #   run: make gitignore/init
 
-      - name: Create a .gitignore file with most common rules
-        run: make gitignore/init
+      # - name: Install Golang
+      #   run: make go/install
 
-      - name: Install Golang
-        run: make go/install
+      # - name: Display Gomplate version
+      #   run: make gomplate/version
 
-      - name: Display Gomplate version
-        run: make gomplate/version
+      # - name: Display Go version
+      #   run: make go/version
 
-      - name: Display Go version
-        run: make go/version
+      # - name: Help screen
+      #   run: make help/clean
 
-      - name: Help screen
-        run: make help/clean
+      # - name: Initialize project with default configuration
+      #   run: make init
 
-      - name: Initialize project with default configuration
-        run: make init
+      # - name: Install pre-commit hooks
+      #   run: make pre-commit/install-hooks
 
-      - name: Install pre-commit hooks
-        run: make pre-commit/install-hooks
+      # - name: Install pre-commit using Pip3
+      #   run: make pre-commit/install
 
-      - name: Install pre-commit using Pip3
-        run: make pre-commit/install
+      # - name: Execute pre-commit hooks on all files
+      #   run: make pre-commit/run
 
-      - name: Execute pre-commit hooks on all files
-        run: make pre-commit/run
+      # - name:  Update pre-commit-config.yml with the latest version
+      #   run: make pre-commit/update
 
-      - name:  Update pre-commit-config.yml with the latest version
-        run: make pre-commit/update
+      # - name: Display pre-commit version
+      #   run: make pre-commit/version
 
-      - name: Display pre-commit version
-        run: make pre-commit/version
+      # - name: Install Python 3
+      #   run: make python/install
 
-      - name: Install Python 3
-        run: make python/install
+      # - name: Install Python 3 Pip
+      #   run: make python/pip-install
 
-      - name: Install Python 3 Pip
-        run: make python/pip-install
+      # - name: Display Python & Pip version
+      #   run: make python/version
 
-      - name: Display Python & Pip version
-        run: make python/version
+      # - name: Create a Python 3 virtualenv in the current directory
+      #   run: make python/virtualenv-create
 
-      - name: Create a Python 3 virtualenv in the current directory
-        run: make python/virtualenv-create
+      # - name: Install Python 3 virtualenv
+      #   run: make python/virtualenv
 
-      - name: Install Python 3 virtualenv
-        run: make python/virtualenv
+      # - name: Builds or changes infrastructure according to Terraform configuration files in DIR
+      #   run: make terraform/apply
 
-      - name: Builds or changes infrastructure according to Terraform configuration files in DIR
-        run: make terraform/apply
+      # - name: Remove temporary files and directories
+      #   run: make terraform/clean
 
-      - name: Remove temporary files and directories
-        run: make terraform/clean
+      # - name: Destroy Terraform-managed infrastructure.
+      #   run: make terraform/destroy
 
-      - name: Destroy Terraform-managed infrastructure.
-        run: make terraform/destroy
+      # - name: Build doc/terraform-docs.md with Terraform Docs
+      #   run: make terraform-docs/build
 
-      - name: Build doc/terraform-docs.md with Terraform Docs
-        run: make terraform-docs/build
+      # - name: Create initl configuration
+      #   run: make terraform-docs/init
 
-      - name: Create initl configuration
-        run: make terraform-docs/init
+      # - name: Display Terraform Docs version
+      #   run: make terraform-docs/version
 
-      - name: Display Terraform Docs version
-        run: make terraform-docs/version
+      # - name: Check if the input is formatted. Exit status will be 0 if all input is properly formatted and non-zero otherwise.
+      #   run: make terraform/fmt
 
-      - name: Check if the input is formatted. Exit status will be 0 if all input is properly formatted and non-zero otherwise.
-        run: make terraform/fmt
+      # - name: Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      #   run: make terraform/init/backend
 
-      - name: Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-        run: make terraform/init/backend
+      # - name: Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      #   run: make terraform/init
 
-      - name: Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-        run: make terraform/init
+      # - name: Generates an execution plan for Terraform
+      #   run: make terraform/plan
 
-      - name: Generates an execution plan for Terraform
-        run: make terraform/plan
+      # - name: Validate the configuration files in a directory, referring only to the configuration and not accessing any remote services such as remote state, provider APIs, etc.
+      #   run: make terraform/validate
 
-      - name: Validate the configuration files in a directory, referring only to the configuration and not accessing any remote services such as remote state, provider APIs, etc.
-        run: make terraform/validate
+      # - name: Display Terraform version
+      #   run: make terraform/version
 
-      - name: Display Terraform version
-        run: make terraform/version
+      # - name: Run Terrascan
+      #   run: make terrascan/run
 
-      - name: Run Terrascan
-        run: make terrascan/run
+      # - name: Display Terrascan version
+      #   run: make terrascan/version
 
-      - name: Display Terrascan version
-        run: make terrascan/version
+      # - name: Init AWS TFLINT
+      #   run: make tflint/init
 
-      - name: Init AWS TFLINT
-        run: make tflint/init
+      # - name: Display TFLINT version
+      #   run: make tflint/version
 
-      - name: Display TFLINT version
-        run: make tflint/version
+      # - name: Run TFSEC
+      #   run: make tfsec/run
 
-      - name: Run TFSEC
-        run: make tfsec/run
+      # - name: Display TFSEC version
+      #   run: make tfsec/version
 
-      - name: Display TFSEC version
-        run: make tfsec/version
+      # - name: Execute tfswitch
+      #   run: make tfswitch/run
 
-      - name: Execute tfswitch
-        run: make tfswitch/run
-
-      - name: Display tfswitch version
-        run: make tfswitch/version
+      # - name: Display tfswitch version
+      #   run: make tfswitch/version
