@@ -1,8 +1,8 @@
-name: 'Dockerfile'
-description: 'Build Dev Container image'
+name: "Dockerfile"
+description: "Build Dev Container image"
 runs:
-  using: 'docker'
-  image: './.devcontainer/Dockerfile'
+  using: "docker"
+  image: "./.devcontainer/Dockerfile"
   args:
     - VARIANT: "ubuntu-20.04"
     - GOMPLATE_VERSION: "3.11.3"

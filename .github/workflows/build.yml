@@ -3,14 +3,14 @@ name: Docker Image CI
 on:
   push:
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Build the Docker image
-      run: cd .devcontainer && docker build . --file Dockerfile --tag aws-terraform-dev-container:${{ github.run_id }}
+      - name: Build the Docker image
+        run: cd .devcontainer && docker build . --file Dockerfile --tag aws-terraform-dev-container:${{ github.run_id }}
