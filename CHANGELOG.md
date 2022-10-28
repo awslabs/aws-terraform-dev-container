@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [v1.1.0] - 2022-10-28
 
 ### Added
+
 - [Adopt AWS Code Habits](https://github.com/awslabs/aws-code-habits)
 
 ## [v1.0.0] - 2022-10-14
