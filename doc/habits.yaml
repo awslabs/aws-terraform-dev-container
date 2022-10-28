@@ -62,22 +62,22 @@ usage: |-
 references:
   - name: Terraform by HashiCorp
     description: Terraform is an open-source infrastructure as code software tool that enables you to safely and predictably create, change, and improve infrastructure.
-    url: [terraform]
+    url: https://www.terraform.io
   - name: Changelog
     description: All notable changes.
-    url: (CHANGELOG.md)
+    url: CHANGELOG.md
   - name: Code Of Conduct
     description: Amazon Open Source Code of Conduct
-    url: (CODE_OF_CONDUCT.md)
+    url: CODE_OF_CONDUCT.md
   - name: Contributing
     description: Learn how to contribute
-    url: (CONTRIBUTING.md)
+    url: CONTRIBUTING.md
   - name: License
     description: MIT No Attribution
-    url: (LICENSE)
+    url: LICENSE
   - name: GNU Make
     description: If you are new to make, or are looking for a general introduction.
-    url: (https://www.gnu.org/software/make/manual/make.html)
+    url: https://www.gnu.org/software/make/manual/make.html
 
 license: MIT-0
 copyright: Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -88,7 +88,7 @@ anchors:
   - name: vscode-dev-container
     url: https://code.visualstudio.com/docs/remote/containers
   - name: terraform
-    url: https://www.terraform.io/
+    url: https://www.terraform.io
   - name: license
     url: LICENSE
   - name: tools
