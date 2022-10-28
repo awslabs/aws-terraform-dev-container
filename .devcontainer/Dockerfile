@@ -72,9 +72,6 @@ RUN mkdir -p /tmp/download /tmp/extract \
 ARG TFLINT_AWS_RULESET_VERSION=0.13.4
 RUN curl https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
-COPY files/.tflint.hcl /home/vscode/.tflint.hcl
-RUN sed -i "s,TFLINT_AWS_RULESET_VERSION,${TFLINT_AWS_RULESET_VERSION},g" /home/vscode/.tflint.hcl
-
 # TFSEC
 ARG TFSEC_VERSION=1.15.2
 RUN mkdir -p /tmp/download \
