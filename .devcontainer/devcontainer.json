@@ -11,7 +11,7 @@
       "TERRASCAN_VERSION": "1.15.2"
     }
   },
-  "postStartCommand": "post-start && devcontainer-info",
+  "postStartCommand": "make habits/install && post-start",
   "settings": {},
   "extensions": [
     "hashicorp.terraform"
