@@ -3,7 +3,7 @@
   "build": {
     "dockerfile": "Dockerfile",
     "args": {
-      "VARIANT": "ubuntu-20.04",
+      "VARIANT": "ubuntu-22.04",
       "GOMPLATE_VERSION": "3.11.3",
       "TERRAFORM_DOCS_VERSION": "0.16.0",
       "TFLINT_AWS_RULESET_VERSION": "0.17.1",
@@ -13,8 +13,6 @@
   },
   "postStartCommand": "make habits/install && post-start",
   "settings": {},
-  "extensions": [
-    "hashicorp.terraform"
-  ],
+  "extensions": ["hashicorp.terraform"],
   "remoteUser": "vscode"
 }
