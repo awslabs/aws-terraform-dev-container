@@ -28,7 +28,7 @@ A VSCode Dev Container with [tools][tools] to help you build and manage AWS infr
 
 ## Table of Contents
 
-- [Getting Started](#getting_started)
+- [Getting Started](#getting-started)
 
 - [Prerequisites](#prerequisites)
 
@@ -58,7 +58,7 @@ A list of things you need, or how to install them.
 ## Usage
 
 ```bash
-  make [tab][tab]
+make [tab][tab]
 ```
 
 For example, if you want to explore the most common [terraform][terraform] commands:
@@ -85,7 +85,7 @@ For more information about each [Make targets available](Makefile.md).
 - [License](<(LICENSE)>) - MIT No Attribution
 - [GNU Make](<(https://www.gnu.org/software/make/manual/make.html)>) - If you are new to make, or are looking for a general introduction.
 
-- [AWS Code Habits][aws-code-habits] - Increase efficiency with a collection of Make targets, Ansible playbooks and more.
+- [AWS Code Habits][aws-code-habits] - A library with Make targets, Ansible playbooks, Jinja templates (and more) designed to boost common software development tasks and enhance governance.
 
 ## License
 
@@ -98,9 +98,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 [repo]: https://gitlab.aws.dev/proserve-labs/aws-terraform-dev-container
 [logo]: doc/logo.png
 [aws-code-habits]: https://github.com/awslabs/aws-code-habits
-
-<!--  ANCHORS -->
-
 [docker]: https://www.docker.com/products/docker-desktop/
 [vscode-dev-container]: https://code.visualstudio.com/docs/remote/containers
 [terraform]: https://www.terraform.io/
