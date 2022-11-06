@@ -17,15 +17,19 @@ A VSCode Dev Container with [tools][tools] to help you build and manage AWS infr
 | ![screenshot-1](doc/images/screenshot-1.gif) |
 |:--:|
 | *Develop your project in a Docker container* |
+
 | ![screenshot-2](doc/images/screenshot-2.gif) |
 |:--:|
 | *Increase productivity with well-defined `Make` commands* |
+
 | ![screenshot-3](doc/images/screenshot-3.gif) |
 |:--:|
 | *Ensure every team member has all the tools on their correct versions* |
+
 | ![screenshot-4](doc/images/screenshot-4.png) |
 |:--:|
 | *Extensions already installed for you* |
+
 
 ## Table of Contents
 
