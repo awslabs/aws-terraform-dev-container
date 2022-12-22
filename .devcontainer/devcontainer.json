@@ -4,6 +4,7 @@
     "dockerfile": "Dockerfile",
     "args": {
       "VARIANT": "ubuntu-22.04",
+      "TERRAFORM_VERSION": "1.3.6",
       "GOMPLATE_VERSION": "3.11.3",
       "TERRAFORM_DOCS_VERSION": "0.16.0",
       "TFLINT_AWS_RULESET_VERSION": "0.17.1",

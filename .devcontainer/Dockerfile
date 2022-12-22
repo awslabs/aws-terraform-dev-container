@@ -7,6 +7,8 @@
 ARG VARIANT="jammy"
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 
+ARG TARGETARCH
+
 # Install OS packages
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
@@ -35,15 +37,22 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 RUN update-ca-certificates
 
 # Terraform
-RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - \
-	&& apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
-	&& apt-get update && sudo apt-get -qq install --no-install-recommends --yes terraform terraform-ls
+# hashicorp only provides amd64 packages, so we have to make do
+ARG TERRAFORM_VERSION=1.3.6
+RUN mkdir -p /tmp/download \
+	&& cd /tmp/download \
+	&& wget -O terraform.zip "https://releases.hashicorp.com/terraform/1.3.6/terraform_1.3.6_linux_${TARGETARCH}.zip" \
+	&& unzip -qq ./terraform.zip \
+	&& mv ./terraform /usr/local/bin/terraform \
+	&& rm -rf /tmp/download
 
 # AWS CLI
 SHELL ["/bin/zsh", "-c"]
 RUN mkdir -p /tmp/download \
 	&& cd /tmp/download \
-	&& curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" --silent -o "awscliv2.zip" \
+	&& ARCH=${TARGETARCH/amd64/x86_64} \
+	&& ARCH=${ARCH/arm64/aarch64} \
+	&& wget -O awscliv2.zip "https://awscli.amazonaws.com/awscli-exe-linux-${ARCH}.zip" \
 	&& unzip -qq awscliv2.zip \
 	&& ./aws/install \
 	&& rm -rf /tmp/download \
@@ -55,7 +64,7 @@ RUN mkdir -p /tmp/download \
 # Gomplate
 ARG GOMPLATE_VERSION=3.10.0
 RUN mkdir -p /tmp/download \
-	&& wget https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-amd64-slim -O /tmp/download/gomplate --quiet --no-check-certificate \
+	&& wget -O /tmp/download/gomplate "https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-${TARGETARCH}-slim" \
 	&& chmod +x /tmp/download/gomplate \
 	&& mv /tmp/download/gomplate /usr/local/bin/ \
 	&& rm -rf /tmp/download
@@ -63,8 +72,8 @@ RUN mkdir -p /tmp/download \
 # Terraform Docs
 ARG TERRAFORM_DOCS_VERSION=0.16.0
 RUN mkdir -p /tmp/download /tmp/extract \
-	&& wget https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz -O /tmp/download/terraform-docs-${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz --quiet --no-check-certificate \
-	&& tar -C /tmp/extract -xzf /tmp/download/terraform-docs-${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz \
+	&& wget -O /tmp/download/terraform-docs.tar.gz "https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-${TARGETARCH}.tar.gz" \
+	&& tar -C /tmp/extract -xzf /tmp/download/terraform-docs.tar.gz \
 	&& mv /tmp/extract/terraform-docs /usr/local/bin/ \
 	&& rm -rf /tmp/download /tmp/extract
 
@@ -75,7 +84,7 @@ RUN curl https://raw.githubusercontent.com/terraform-linters/tflint/master/insta
 # TFSEC
 ARG TFSEC_VERSION=1.15.2
 RUN mkdir -p /tmp/download \
-	&& wget https://github.com/aquasecurity/tfsec/releases/download/v${TFSEC_VERSION}/tfsec-linux-amd64 -O /tmp/download/tfsec --quiet --no-check-certificate \
+	&& wget -O /tmp/download/tfsec "https://github.com/aquasecurity/tfsec/releases/download/v${TFSEC_VERSION}/tfsec-linux-${TARGETARCH}" \
 	&& chmod +x /tmp/download/tfsec \
 	&& mv /tmp/download/tfsec /usr/local/bin/ \
 	&& rm -rf /tmp/download
@@ -86,9 +95,10 @@ RUN curl -L https://raw.githubusercontent.com/warrensbox/terraform-switcher/rele
 # TERRASCAN
 ARG TERRASCAN_VERSION=1.13.2
 RUN mkdir -p /tmp/download /tmp/extract \
-	&& wget https://github.com/accurics/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz -O /tmp/download/terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz --quiet --no-check-certificate \
-	&& sha256sum /tmp/download/terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz \
-	&& tar -C /tmp/extract -xzf /tmp/download/terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz \
+	&& ARCH=${TARGETARCH/amd64/x86_64} \
+	&& wget -O /tmp/download/terrascan "https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_${ARCH}.tar.gz" \
+	&& sha256sum /tmp/download/terrascan \
+	&& tar -C /tmp/extract -xzf /tmp/download/terrascan \
 	&& sudo mv /tmp/extract/terrascan /usr/local/bin/ \
 	&& rm -rf /tmp/download /tmp/extract
 
