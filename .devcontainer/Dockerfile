@@ -35,8 +35,12 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 RUN update-ca-certificates
 
 # Terraform
-RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - \
-	&& apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
+RUN wget -O- https://apt.releases.hashicorp.com/gpg | \
+    gpg --dearmor | \
+    tee /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+	&& echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+    https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+    tee /etc/apt/sources.list.d/hashicorp.list \
 	&& apt-get update && sudo apt-get -qq install --no-install-recommends --yes terraform terraform-ls
 
 # AWS CLI
@@ -51,14 +55,6 @@ RUN mkdir -p /tmp/download \
 	&& autoload -Uz compinit && compinit \
 	&& echo "complete -C '/usr/local/bin/aws_completer' aws" >> /home/vscode/.bashrc \
 	&& echo "complete -C '/usr/local/bin/aws_completer' aws" >> /home/vscode/.zshrc
-
-# Gomplate
-ARG GOMPLATE_VERSION=3.10.0
-RUN mkdir -p /tmp/download \
-	&& wget https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-amd64-slim -O /tmp/download/gomplate --quiet --no-check-certificate \
-	&& chmod +x /tmp/download/gomplate \
-	&& mv /tmp/download/gomplate /usr/local/bin/ \
-	&& rm -rf /tmp/download
 
 # Terraform Docs
 ARG TERRAFORM_DOCS_VERSION=0.16.0
