@@ -1,33 +1,51 @@
+---
+
+# project
 url: https://gitlab.aws.dev/proserve-labs/aws-terraform-dev-container
 
-logo: doc/logo.png
+# Logo (can be local path or remote)
+logo: doc/logo.svg
 
-title: AWS Terraform Dev Container
-description: A VSCode Dev Container with [tools][tools] to help you build and manage AWS infrastructure with Terraform
+title: Tutorials - AWS Getting Started - Build Infrastructure
+description: |-
+  This tutorial leverage the HashiCorp lesson [Build Infrastructure](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/aws-build), you will provision an EC2 instance on Amazon Web Services (AWS).
 
-screenshots:
-  - caption: Develop your project in a Docker container
-    label: screenshot-1
-    url: doc/images/screenshot-1.gif
-  - caption: Increase productivity with well-defined `Make` commands
-    label: screenshot-2
-    url: doc/images/screenshot-2.gif
-  - caption: Ensure every team member has all the tools on their correct versions
-    label: screenshot-3
-    url: doc/images/screenshot-3.gif
-  - caption: Extensions already installed for you
-    label: screenshot-4
-    url: doc/images/screenshot-4.png
 
-getting_started: |-
-  1. On a terminal, inside your Terraform project, execute the following on Mac, Linux or [WSL][wsl]:
+# List of screenshots
+# screenshots:
+#   - caption: Vestibulum malesuada
+#     label: vestibulum-malesuada
+#     url: https://via.placeholder.com/512
+
+usage: |
+  Once you have opened your project with VSCode Dev Containers:
+  1. In the terminal, export the AWS environment variables.
+  2. Execute the following commands
+
   ```bash
-  curl -sL https://raw.githubusercontent.com/awslabs/aws-terraform-dev-container/main/scripts/init.sh | bash
-  ````
-  2. Open the folder with VSCode
-  3. Reopen in Container
+  make pre-commit/run
+  ```
+  Notice the warnings and errors raised by [tfsec](https://github.com/aquasecurity/tfsec), [checkov](https://github.com/bridgecrewio/checkov), and/or [terrascan](https://github.com/tenable/terrascan).
+  These messages allow us to improve the security of our solution overall. For this tutorial, we will ignore them.
 
-  To reopen in container manually, open the [command pallete](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette) on VS Code and select `Rebuild and Reopen in Container`
+  ```bash
+  make terraform/plan
+  make terraform/apply
+  make terraform/destroy
+  ```
+
+  To generate documentation powered by [terraform-docs](https://github.com/terraform-docs/terraform-docs):
+  ```bash
+  # you can combine two Make targets
+  make terraform-docs/init terraform-docs/build
+  ```
+
+  To build your project's documentation
+  ```bash
+  make doc/build
+  ````
+  Notice the creation, or update, of the README.md.
+  You can have a closer look into each Make target [here](.devcontainer/lib/make).
 
 prerequisites:
   content: |-
@@ -43,55 +61,32 @@ prerequisites:
       description: An extension pack that lets you open any folder in a container, on a remote machine, or in WSL and take advantage of VS Code's full feature set.
       url: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack
 
-usage: |-
-  ```bash
-  make [tab][tab]
+installation: |
+  If you are using AWS Terraform Dev Container, all the tools should be already installed.
+
+testing: |
   ```
-  For example, if you want to explore the most common [terraform][terraform] commands:
-  ```bash
-  make terraform/[tab]
-  apply     clean     destroy   fmt       init      init/     plan      validate  version
+  make pre-commit/run terraform/plan
   ```
 
-  To display all available commands:
-  ```bash
-  make help
+deployment: |
   ```
-  For more information about each [Make targets available](Makefile.md).
+  make terraform/apply
+  ```
 
+# If you want to include other files
+include:
+  - "Terraform.md"
+
+# explicit urls needs to be enclosed with ()
+# implicit urls needs to be enclosed with []
 references:
   - name: Terraform by HashiCorp
     description: Terraform is an open-source infrastructure as code software tool that enables you to safely and predictably create, change, and improve infrastructure.
-    url: https://www.terraform.io
-  - name: Changelog
-    description: All notable changes.
-    url: CHANGELOG.md
-  - name: Code Of Conduct
-    description: Amazon Open Source Code of Conduct
-    url: CODE_OF_CONDUCT.md
-  - name: Contributing
-    description: Learn how to contribute
-    url: CONTRIBUTING.md
-  - name: License
-    description: MIT No Attribution
-    url: LICENSE
-  - name: GNU Make
-    description: If you are new to make, or are looking for a general introduction.
-    url: https://www.gnu.org/software/make/manual/make.html
+    url: [terraform]
 
-license: MIT-0
-copyright: Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-anchors:
-  - name: docker
-    url: https://www.docker.com/products/docker-desktop/
-  - name: vscode-dev-container
-    url: https://code.visualstudio.com/docs/remote/containers
+links:
   - name: terraform
-    url: https://www.terraform.io
-  - name: license
-    url: LICENSE
-  - name: tools
-    url: TOOLS
-  - name: wsl
-    url: https://learn.microsoft.com/en-us/windows/wsl/install
+    url: https://www.terraform.io/
+  - name: Developer HashiCorp
+    url: https://developer.hashicorp.com/terraform/tutorials/aws-get-started
