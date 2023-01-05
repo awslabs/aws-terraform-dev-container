@@ -30,7 +30,7 @@ jobs:
       # We are ignoring pre-commit checks on purpose in order for demonstrating purposes and progress with other jobs
       # You shouldn't ignore your pre-commit checks and their respective warnings, please remediate them accordingly.
       - name: Install pre-commit hooks and execute rules
-        run: pre-commit run --all-files || true 
+        run: pre-commit run --all-files || true
 
   doc-hygiene:
     needs: code-hygiene
