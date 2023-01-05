@@ -12,7 +12,7 @@ include $(HABITS)/lib/make/Makefile
 include $(HABITS)/lib/make/*/Makefile
 
 .PHONY: docs
-docs: terraform-docs/init terraform-docs/build doc/build
+docs: terraform-docs/build doc/build
 
 .PHONY: plan
 ## Performs code and doc hygiene, then a terraform plan
