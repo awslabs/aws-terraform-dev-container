@@ -7,46 +7,43 @@
   **
 -->
 
-
-![logo](doc/logo.svg)
-
-
-<!-- SHIELDS -->
+![logo][logo]
 
 
-<!-- TITLE & DESCRIPTION -->
 # Tutorials - AWS Getting Started - Build Infrastructure
 
 This tutorial leverage the HashiCorp lesson [Build Infrastructure](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/aws-build), you will provision an EC2 instance on Amazon Web Services (AWS).
 
-<!-- SCREENSHOTS -->
-
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
 
 - [Prerequisites](#prerequisites)
 
+- [Installation](#installation)
 
- - [Usage](#usage)
-
- - [Installation](#installation)
- - [Testing](#testing)
- - [Deployment](#deployment)
+- [Usage](#usage)
 
 
- - [References](#references)
+- [Testing](#testing)
+
+- [Deployment](#deployment)
 
 
+## Prerequisites
+  A list of things you need, or how to install them.
 
-<!-- USAGE -->
+- [Docker](https://www.docker.com/products/docker-desktop/) - The fastest way to containerize applications
+- [Visual Studio Code](https://code.visualstudio.com/) - Visual Studio Code is a code editor redefined and optimized for building and debugging modern web and cloud applications.
+- [VSCode Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) - An extension pack that lets you open any folder in a container, on a remote machine, or in WSL and take advantage of VS Code's full feature set.
+
+
+## Installation
+If you are using AWS Terraform Dev Container, all the tools should be already installed.
+
+
 
 ## Usage
----
-<details open>
-  <summary>Expand</summary>
-
 Once you have opened your project with VSCode Dev Containers:
 1. In the terminal, export the AWS environment variables.
 2. Execute the following commands
@@ -76,112 +73,30 @@ make doc/build
 Notice the creation, or update, of the README.md.
 You can have a closer look into each Make target [here](.devcontainer/lib/make).
 
-</details>
 
-
-<!-- PREREQUISITES -->
-
-
-<!-- INSTALLATION -->
-
-## Installation
----
-<details open>
-  <summary>Expand</summary>
-
-If you are using AWS Terraform Dev Container, all the tools should be already installed.
-
-</details>
-
-
-<!-- TESTING -->
 
 ## Testing
----
-<details>
-  <summary>Expand</summary>
-
 ```
 make pre-commit/run terraform/plan
 ```
 
-</details>
-
-
-<!-- DEPLOYMENT -->
 
 ## Deployment
----
-<details>
-  <summary>Expand</summary>
-
 ```
 make terraform/apply
 ```
 
-</details>
-
-
-
-# Terraform
-## Requirements
-
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.2.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 4.16 |
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.34.0 |
-
-## Modules
-
-No modules.
-
-## Resources
-
-| Name | Type |
-|------|------|
-| [aws_instance.app_server](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
-
-## Inputs
-
-No inputs.
-
-## Outputs
-
-No outputs.
-
 
 
 ## References
-- [Terraform by HashiCorp](https://www.terraform.io) - Terraform is an open-source infrastructure as code software tool that enables you to safely and predictably create, change, and improve infrastructure.
-- [Changelog](CHANGELOG.md) - All notable changes.
-- [Code Of Conduct](CODE_OF_CONDUCT.md) - Amazon Open Source Code of Conduct
-- [Contributing](CONTRIBUTING.md) - Learn how to contribute
-- [License](LICENSE) - MIT No Attribution
-- [GNU Make](https://www.gnu.org/software/make/manual/make.html) - If you are new to make, or are looking for a general introduction.
+- [Terraform by HashiCorp](['terraform']) - Terraform is an open-source infrastructure as code software tool that enables you to safely and predictably create, change, and improve infrastructure.
 
-* [Terraform by HashiCorp][terraform] - Terraform is an open-source infrastructure as code software tool that enables you to safely and predictably create, change, and improve infrastructure.
+- [AWS Code Habits][aws-code-habits] - A library with Make targets, Ansible playbooks, Jinja templates (and more) designed to boost common software development tasks and enhance governance.
 
 
-</details>
 
 
-## Copyright
+[repo]: https://gitlab.aws.dev/proserve-labs/aws-terraform-dev-container
+[logo]: doc/logo.svg
 
-Copyright © TBD -2022 [YOUR_COMPANY](https://www.yourcompany.com/)
-
-## Trademarks
-
-All other trademarks referenced herein are the property of their respective owners.
-
-<!-- LINKS -->
-[issue]: https:///-/issues
-[contributors]: https:///-/graphs/main
-
-[terraform]: https://www.terraform.io/
-[Developer HashiCorp]: https://developer.hashicorp.com/terraform/tutorials/aws-get-started
+[aws-code-habits]: https://github.com/awslabs/aws-code-habits
