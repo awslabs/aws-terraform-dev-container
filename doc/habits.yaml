@@ -90,3 +90,6 @@ links:
     url: https://www.terraform.io/
   - name: Developer HashiCorp
     url: https://developer.hashicorp.com/terraform/tutorials/aws-get-started
+
+license: MIT-0
+copyright: Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.

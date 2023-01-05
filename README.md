@@ -93,7 +93,11 @@ make terraform/apply
 
 - [AWS Code Habits][aws-code-habits] - A library with Make targets, Ansible playbooks, Jinja templates (and more) designed to boost common software development tasks and enhance governance.
 
+## License
+This project is licensed under the MIT-0 License. See the [LICENSE](LICENSE) file.
 
+## Copyright
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 
 [repo]: https://gitlab.aws.dev/proserve-labs/aws-terraform-dev-container
