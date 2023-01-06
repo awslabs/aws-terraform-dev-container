@@ -4,9 +4,8 @@ runs:
   using: "docker"
   image: "./.devcontainer/Dockerfile"
   args:
-    - VARIANT: "ubuntu-20.04"
-    - GOMPLATE_VERSION: "3.11.3"
+    - VARIANT: "ubuntu-22.04"
     - TERRAFORM_DOCS_VERSION: "0.16.0"
-    - TFLINT_AWS_RULESET_VERSION: "0.17.1"
     - TFSEC_VERSION: "1.28.0"
     - TERRASCAN_VERSION: "1.15.2"
+    - TFLINT_AWS_RULESET_VERSION: "0.21.1"
