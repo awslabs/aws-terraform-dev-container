@@ -15,5 +15,29 @@ jobs:
         with:
           submodules: "true"
 
-      - name: Display AWS CLI version
-        run: make aws/cli/version
+      - name: Install Ansible
+        run: make ansible/install ansible/playbooks/ubuntu/install
+
+      - name: Install AWS Command Line Interface v2
+        run: make aws/cli/install/v2 aws/cli/autocomplete
+
+      - name: Install Terraform (latest version)
+        run: make terraform/install
+
+      - name: Install terraform-docs
+        run: make terraform-docs/install
+
+      - name: Install checkov
+        run: make checkov/install
+
+      - name: Install tflint
+        run: make tflint/install
+
+      - name: Install tfsec
+        run: make tfsec/install
+
+      - name: Install tfswitch
+        run: make tfswitch/install
+
+      - name: Install terrascan
+        run: make terrascan/install
