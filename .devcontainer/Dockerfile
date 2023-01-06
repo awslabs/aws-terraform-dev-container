@@ -18,3 +18,8 @@ RUN cd /tmp/ \
     && cd aws-code-habits \
     && make devcontainer/terraform/init \
     && rm -rf /tmp/aws-code-habits
+
+USER root
+
+COPY post-start.sh /usr/local/bin/post-start
+RUN chmod +x /usr/local/bin/post-start
