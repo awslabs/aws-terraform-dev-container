@@ -3,7 +3,11 @@
   "build": {
     "dockerfile": "Dockerfile",
     "args": {
-      "VARIANT": "ubuntu-22.04"
+      "VARIANT": "ubuntu-22.04",
+      "TERRAFORM_DOCS_VERSION": "0.16.0",
+      "TFSEC_VERSION": "1.28.0",
+      "TERRASCAN_VERSION": "1.15.2",
+      "TFLINT_AWS_RULESET_VERSION": "0.21.1"
     }
   },
   "postStartCommand": "post-start",
