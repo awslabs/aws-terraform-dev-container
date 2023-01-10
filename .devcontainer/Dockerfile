@@ -7,6 +7,9 @@
 ARG VARIANT="jammy"
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 
+# import automatic platform ARGs from buildkit
+# `export DOCKER_BUILDKIT=1` to get this
+# see https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
 ARG TARGETARCH
 
 # Install OS packages
