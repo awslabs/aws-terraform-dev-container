@@ -92,7 +92,6 @@ For more information about each [Make targets available](Makefile.md).
 - [License](LICENSE) - MIT No Attribution
 - [GNU Make](https://www.gnu.org/software/make/manual/make.html) - If you are new to make, or are looking for a general introduction.
 
-- [AWS Code Habits][aws-code-habits] - A library with Make targets, Ansible playbooks, Jinja templates (and more) designed to boost common software development tasks and enhance governance.
 
 ## License
 This project is licensed under the MIT-0 License. See the [LICENSE](LICENSE) file.
@@ -103,8 +102,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 [repo]: https://gitlab.aws.dev/proserve-labs/aws-terraform-dev-container
 [logo]: doc/logo.png
-
-[aws-code-habits]: https://github.com/awslabs/aws-code-habits
 
 [docker]: https://www.docker.com/products/docker-desktop/
 [vscode-dev-container]: https://code.visualstudio.com/docs/remote/containers
