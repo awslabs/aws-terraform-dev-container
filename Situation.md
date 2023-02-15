@@ -1,5 +1,6 @@
 # Situation
 ## 1. Install
+<details>
 
 ```bash
 # https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
@@ -17,8 +18,10 @@ terraform --version
 # install autocomplete, need to restart
 terraform -install-autocomplete
 ```
+</details>
 
 ## 2. [Let's code!](main.tf)
+<details>
 
 ```bash
 terraform init
@@ -33,8 +36,10 @@ terraform destroy
 # clean up
 rm -rf .terraform.lock.hcl terraform.tfstate* .terraform
 ```
+</details>
 
 ## 3. What's wrong?
+<details>
 
 What if:
 - people work on different OSes
@@ -47,3 +52,4 @@ What if:
     - common `.pre-commit-config.yaml`, `.gitignore`, and more
 
 How can we provide our developers a common environment?
+</details>

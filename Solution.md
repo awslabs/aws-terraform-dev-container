@@ -1,6 +1,7 @@
 # [AWS Terraform Dev Container](https://github.com/awslabs/aws-terraform-dev-container)
 
 ## Prerequisites
+<details>
 
 A list of things you need, or how to install them.
 
@@ -10,13 +11,18 @@ A list of things you need, or how to install them.
 
 - (Windows) [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) - Developers can access the power of both Windows and Linux at the same time on a Windows machine.
 
+</details>
 
 ## Developing inside a container
+<details>
 
 https://code.visualstudio.com/docs/devcontainers/containers
 ![architecture](https://code.visualstudio.com/assets/docs/devcontainers/containers/architecture-containers.png)
 
+</details>
+
 ## Getting started
+<details>
 
 Automatically:
 ```bash
@@ -42,7 +48,10 @@ Let's have a quick look on:
 
 Let's (re)build our container!
 
+</details>
+
 ## What about the problems we discussed earlier?
+<details>
 
 What if:
 
@@ -137,7 +146,10 @@ apply: plan
 	terraform apply -auto-approve tf.plan
 ```
 
-# There is an issue with versioning!
+</details>
+
+# There is an issue with the latest version!
+<details>
 
 We are running the latest version of terraform
 ```bash
@@ -156,3 +168,4 @@ source ~/.profile # vscode server doesn't use the login shell automatically
 ```
 
 Run `make apply` again now! Issue gone!
+</details>
