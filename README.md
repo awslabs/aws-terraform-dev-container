@@ -1,9 +1,6 @@
 # BuildOnAWS
 
-## Problem
-
-### 1. Install
-<details>
+## 1. Install
 
 ```bash
 # https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
@@ -21,10 +18,8 @@ terraform --version
 # install autocomplete, need to restart
 terraform -install-autocomplete
 ```
-</details>
 
 ### 2. [Let's code!](main.tf)
-<details>
 
 ```bash
 terraform init
@@ -39,30 +34,25 @@ terraform destroy
 # clean up
 rm -rf .terraform.lock.hcl terraform.tfstate* .terraform
 ```
-</details>
 
 ### 3. What's wrong?
-<details>
 
 What if:
+
 - people work on different OSes
-    - installation varies
+  - installation varies
 - terraform or 3rd party tools not installed
-    - lint, documentation, static code analysis, and more
-    - versions do not match
+  - lint, documentation, static code analysis, and more
+  - versions do not match
 - commands are not executed consistently
 - what about hygiene?
-    - common `.pre-commit-config.yaml`, `.gitignore`, and more
+  - common `.pre-commit-config.yaml`, `.gitignore`, and more
 
 How can we provide our developers a common environment?
-</details>
 
 ## Solution
 
-[AWS Terraform Dev Container](https://github.com/awslabs/aws-terraform-dev-container)
-
 ### Prerequisites
-<details>
 
 A list of things you need, or how to install them.
 
@@ -72,25 +62,21 @@ A list of things you need, or how to install them.
 
 - (Windows) [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) - Developers can access the power of both Windows and Linux at the same time on a Windows machine.
 
-</details>
-
 ### Developing inside a container
-<details>
 
-https://code.visualstudio.com/docs/devcontainers/containers
+[VSCode DevContainer](https://code.visualstudio.com/docs/devcontainers/containers)
 ![architecture](https://code.visualstudio.com/assets/docs/devcontainers/containers/architecture-containers.png)
 
-</details>
-
 ### Getting started
-<details>
 
 Automatically:
+
 ```bash
 curl -sL https://raw.githubusercontent.com/awslabs/aws-terraform-dev-container/main/scripts/init.sh | bash
 ```
 
 Or manually:
+
 ```bash
 git clone --branch=main --depth=1 git@github.com:awslabs/aws-terraform-dev-container.git
 mv aws-terraform-dev-container/.devcontainer .devcontainer
@@ -102,17 +88,15 @@ cp habits/scripts/Makefile Makefile
 ```
 
 Let's have a quick look on:
-* [devcontainer.json](.devcontainer/devcontainer.json)
-* [Dockerfile](.devcontainer/Dockerfile)
-* [AWS Code Habits](habits)
-* [Makefile](Makefile)
+
+- [devcontainer.json](.devcontainer/devcontainer.json)
+- [Dockerfile](.devcontainer/Dockerfile)
+- [AWS Code Habits](habits)
+- [Makefile](Makefile)
 
 Let's (re)build our container!
 
-</details>
-
 ### What about the problems we discussed earlier?
-<details>
 
 What if:
 
@@ -131,7 +115,8 @@ make terraform/install
 > terraform or 3rd party tool versions do not match?
 
 Tooling is part of version control now:
-```
+
+```json
 "TERRAFORM_DOCS_VERSION": "0.16.0",
 "TFSEC_VERSION": "1.28.0",
 "TERRASCAN_VERSION": "1.15.2",
@@ -147,9 +132,11 @@ make help
 > not all 3rd party tools available?
 
 Part of the [Docker image build process](.devcontainer/Dockerfile#L19).
+
 ```bash
 make devcontainer/terraform/init
 ```
+
 [habits/lib/make/devcontainer/Makefile](habits/lib/make/devcontainer/Makefile#L11)
 
 > lint
@@ -187,7 +174,7 @@ make tfsec/run
 
 Use the `Habits` library:
 
-```
+```bash
 make terraform/plan
 ```
 
@@ -199,20 +186,18 @@ init: tflint/init terraform/pre-commit/init terraform/gitignore/init
 
 .PHONY: plan
 plan: terraform-docs/build pre-commit/run
-	terraform plan -out tf.plan
-	terraform show -json tf.plan  > tf.json
+  terraform plan -out tf.plan
+  terraform show -json tf.plan  > tf.json
 
 .PHONY: apply
 apply: plan
-	terraform apply -auto-approve tf.plan
+  terraform apply -auto-approve tf.plan
 ```
 
-</details>
-
-### There is an issue with the latest version!
-<details>
+### Can you find the issue?
 
 We are running the latest version of terraform
+
 ```bash
 terraform --version
 Terraform v1.3.8
@@ -229,4 +214,3 @@ source ~/.profile # vscode server doesn't use the login shell automatically
 ```
 
 Run `make apply` again now! Issue gone!
-</details>
