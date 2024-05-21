@@ -71,7 +71,7 @@ make [tab][tab]
 For example, if you want to explore the most common [terraform][terraform] commands:
 ```bash
 make terraform/[tab]
-apply     clean     destroy   fmt       init      init/     plan      validate  version
+apply     clean     destroy   fmt       init      init/     plan      validate  version  show    state list
 ```
 
 To display all available commands:
@@ -85,7 +85,7 @@ For more information about each [Make targets available](Makefile.md).
 
 
 ## References
-- [Terraform by HashiCorp](https://www.terraform.io) - Terraform is an open-source infrastructure as code software tool that enables you to safely and predictably create, change, and improve infrastructure.
+- [Terraform by HashiCorp](https://www.terraform.io) - Terraform is an open-source infrastructure as a code software tool that enables you to safely and predictably create, change, and improve infrastructure.
 - [Changelog](CHANGELOG.md) - All notable changes.
 - [Code Of Conduct](CODE_OF_CONDUCT.md) - Amazon Open Source Code of Conduct
 - [Contributing](CONTRIBUTING.md) - Learn how to contribute
