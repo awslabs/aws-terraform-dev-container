@@ -1,3 +1,82 @@
 {
-  "makefile.extensionOutputFolder": "./.vscode"
+  // Editor settings
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.rulers": [120],
+  "editor.renderWhitespace": "boundary",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  
+  // Files settings
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.eol": "\n",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/*.tfstate": true,
+    "**/*.tfstate.*": true,
+    "**/.terraform": true,
+    ".terraform.lock.hcl": true
+  },
+  
+  // Terraform settings
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "[terraform-vars]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "terraform.languageServer": {
+    "enabled": true,
+    "args": []
+  },
+  "terraform.experimentalFeatures.validateOnSave": true,
+  
+  // YAML settings
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  
+  // Markdown settings
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+    "editor.formatOnSave": true
+  },
+  
+  // Terminal settings
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.profiles.linux": {
+    "bash": {
+      "path": "/bin/bash"
+    }
+  },
+  
+  // Git settings
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  
+  // Spell checker settings
+  "cSpell.enabled": true,
+  "cSpell.words": [
+    "azurerm",
+    "checkov",
+    "devcontainer",
+    "gcloud",
+    "infracost",
+    "terragrunt",
+    "terrascan",
+    "tflint",
+    "tfsec"
+  ]
 }

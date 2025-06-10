@@ -1,0 +1,115 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Terraform: Init",
+      "type": "shell",
+      "command": "terraform init",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Terraform: Plan",
+      "type": "shell",
+      "command": "terraform plan -out=tfplan",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "Terraform: Apply",
+      "type": "shell",
+      "command": "terraform apply tfplan",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "Terraform: Apply (Auto-approve)",
+      "type": "shell",
+      "command": "terraform apply -auto-approve",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "Terraform: Destroy",
+      "type": "shell",
+      "command": "terraform destroy",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "Terraform: Validate",
+      "type": "shell",
+      "command": "terraform validate",
+      "problemMatcher": [],
+      "group": "test"
+    },
+    {
+      "label": "Terraform: Format",
+      "type": "shell",
+      "command": "terraform fmt -recursive",
+      "problemMatcher": [],
+      "group": "test"
+    },
+    {
+      "label": "TFLint: Run",
+      "type": "shell",
+      "command": "tflint",
+      "problemMatcher": [],
+      "group": "test"
+    },
+    {
+      "label": "TFSec: Run",
+      "type": "shell",
+      "command": "tfsec .",
+      "problemMatcher": [],
+      "group": "test"
+    },
+    {
+      "label": "Checkov: Run",
+      "type": "shell",
+      "command": "checkov -d .",
+      "problemMatcher": [],
+      "group": "test"
+    },
+    {
+      "label": "Pre-commit: Run All Hooks",
+      "type": "shell",
+      "command": "pre-commit run --all-files",
+      "problemMatcher": [],
+      "group": "test"
+    },
+    {
+      "label": "AWS: Login",
+      "type": "shell",
+      "command": ".devcontainer/scripts/aws-auth.sh",
+      "problemMatcher": []
+    },
+    {
+      "label": "AWS: Login with SSO",
+      "type": "shell",
+      "command": ".devcontainer/scripts/aws-auth.sh --sso",
+      "problemMatcher": []
+    },
+    {
+      "label": "Azure: Login",
+      "type": "shell",
+      "command": ".devcontainer/scripts/azure-auth.sh",
+      "problemMatcher": []
+    },
+    {
+      "label": "GCP: Login",
+      "type": "shell",
+      "command": ".devcontainer/scripts/gcp-auth.sh",
+      "problemMatcher": []
+    },
+    {
+      "label": "Terraform: Clean",
+      "type": "shell",
+      "command": "rm -rf .terraform/ .terraform.lock.hcl terraform.tfstate terraform.tfstate.backup tfplan",
+      "problemMatcher": []
+    }
+  ]
+}

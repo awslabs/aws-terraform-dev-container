@@ -1,25 +1,73 @@
 ARG VARIANT="jammy"
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 
-# Install OS packages
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends \
-    make
+# Set versions as arguments
+ARG TERRAFORM_VERSION="1.5.7"
+ARG TERRAFORM_DOCS_VERSION="0.16.0"
+ARG TFSEC_VERSION="1.28.0"
+ARG TERRASCAN_VERSION="1.18.3"
+ARG TFLINT_VERSION="0.47.0"
+ARG TFLINT_AWS_RULESET_VERSION="0.23.1"
+ARG TFLINT_AZURE_RULESET_VERSION="0.23.0"
+ARG TFLINT_GCP_RULESET_VERSION="0.23.1"
+ARG TERRAGRUNT_VERSION="0.48.0"
+ARG INFRACOST_VERSION="0.10.28"
+ARG CHECKOV_VERSION="2.3.360"
 
-USER vscode
+# Copy library scripts
+COPY library-scripts/*.sh /tmp/library-scripts/
+RUN chmod +x /tmp/library-scripts/*.sh
 
-ARG TERRAFORM_DOCS_VERSION=0.16.0
-ARG TFSEC_VERSION=1.15.2
-ARG TERRASCAN_VERSION=1.13.2
-ARG TFLINT_AWS_RULESET_VERSION=0.21.1
-
-RUN cd /tmp/ \
-    && git clone https://github.com/awslabs/aws-code-habits.git \
-    && cd aws-code-habits \
-    && make devcontainer/terraform/init \
-    && rm -rf /tmp/aws-code-habits
-
+# Install common utilities and dependencies
 USER root
+RUN /tmp/library-scripts/common-utils.sh
 
+# Install cloud CLI tools
+RUN /tmp/library-scripts/cloud-cli-tools.sh
+
+# Install Terraform and related tools
+RUN /tmp/library-scripts/terraform-tools.sh \
+    "${TERRAFORM_VERSION}" \
+    "${TERRAFORM_DOCS_VERSION}" \
+    "${TFSEC_VERSION}" \
+    "${TERRASCAN_VERSION}" \
+    "${TFLINT_VERSION}" \
+    "${TFLINT_AWS_RULESET_VERSION}" \
+    "${TFLINT_AZURE_RULESET_VERSION}" \
+    "${TFLINT_GCP_RULESET_VERSION}" \
+    "${TERRAGRUNT_VERSION}" \
+    "${INFRACOST_VERSION}" \
+    "${CHECKOV_VERSION}"
+
+# Copy scripts and configuration
+COPY scripts /home/vscode/.devcontainer/scripts
+COPY config /home/vscode/.devcontainer/config
+RUN chmod +x /home/vscode/.devcontainer/scripts/*.sh
+RUN chown -R vscode:vscode /home/vscode/.devcontainer
+
+# Set up Terraform plugin cache directory
+RUN mkdir -p /home/vscode/.terraform.d/plugin-cache \
+    && chown -R vscode:vscode /home/vscode/.terraform.d
+
+# Set up credential directories
+RUN mkdir -p /home/vscode/.aws \
+    && mkdir -p /home/vscode/.azure \
+    && mkdir -p /home/vscode/.config/gcloud \
+    && mkdir -p /home/vscode/.ssh \
+    && chown -R vscode:vscode /home/vscode/.aws \
+    && chown -R vscode:vscode /home/vscode/.azure \
+    && chown -R vscode:vscode /home/vscode/.config \
+    && chown -R vscode:vscode /home/vscode/.ssh \
+    && chmod 700 /home/vscode/.ssh
+
+# Clean up
+RUN apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/library-scripts
+
+# Copy post-start script
 COPY post-start.sh /usr/local/bin/post-start
 RUN chmod +x /usr/local/bin/post-start
+
+# Switch back to vscode user
+USER vscode

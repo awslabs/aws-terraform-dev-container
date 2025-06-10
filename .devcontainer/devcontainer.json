@@ -1,17 +1,123 @@
 {
-  "name": "AWS Terraform",
+  "name": "Terraform Development Environment",
   "build": {
     "dockerfile": "Dockerfile",
     "args": {
       "VARIANT": "ubuntu-22.04",
+      "TERRAFORM_VERSION": "1.5.7",
       "TERRAFORM_DOCS_VERSION": "0.16.0",
       "TFSEC_VERSION": "1.28.0",
-      "TERRASCAN_VERSION": "1.15.2",
-      "TFLINT_AWS_RULESET_VERSION": "0.21.1"
+      "TERRASCAN_VERSION": "1.18.3",
+      "TFLINT_VERSION": "0.47.0",
+      "TFLINT_AWS_RULESET_VERSION": "0.23.1",
+      "TFLINT_AZURE_RULESET_VERSION": "0.23.0",
+      "TFLINT_GCP_RULESET_VERSION": "0.23.1",
+      "TERRAGRUNT_VERSION": "0.48.0",
+      "INFRACOST_VERSION": "0.10.28",
+      "CHECKOV_VERSION": "2.3.360"
     }
   },
   "postStartCommand": "post-start",
-  "settings": {},
-  "extensions": ["hashicorp.terraform"],
-  "remoteUser": "vscode"
+  "remoteUser": "vscode",
+  
+  // Configure tool-specific properties
+  "customizations": {
+    "vscode": {
+      // Add the IDs of extensions you want installed when the container is created
+      "extensions": [
+        "hashicorp.terraform",
+        "ms-azuretools.vscode-azureterraform",
+        "run-at-scale.terraform-doc-snippets",
+        "redhat.vscode-yaml",
+        "eamodio.gitlens",
+        "donjayamanne.githistory",
+        "mhutchie.git-graph",
+        "ms-vscode.vscode-node-azure-pack",
+        "ms-vscode-remote.remote-containers",
+        "ms-vscode-remote.remote-ssh",
+        "ms-vscode-remote.remote-ssh-edit",
+        "streetsidesoftware.code-spell-checker",
+        "yzhang.markdown-all-in-one",
+        "davidanson.vscode-markdownlint",
+        "esbenp.prettier-vscode",
+        "timonwong.shellcheck",
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ],
+      
+      // Set *default* container specific settings.json values on container create
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash"
+          }
+        },
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": false,
+        "editor.formatOnType": false,
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
+        
+        // Terraform settings
+        "[terraform]": {
+          "editor.defaultFormatter": "hashicorp.terraform",
+          "editor.formatOnSave": true,
+          "editor.tabSize": 2
+        },
+        "[terraform-vars]": {
+          "editor.defaultFormatter": "hashicorp.terraform",
+          "editor.formatOnSave": true,
+          "editor.tabSize": 2
+        },
+        "terraform.languageServer": {
+          "enabled": true,
+          "args": []
+        },
+        "terraform.experimentalFeatures.validateOnSave": true,
+        
+        // YAML settings
+        "[yaml]": {
+          "editor.defaultFormatter": "redhat.vscode-yaml",
+          "editor.formatOnSave": true,
+          "editor.tabSize": 2
+        },
+        
+        // Markdown settings
+        "[markdown]": {
+          "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+          "editor.formatOnSave": true
+        }
+      }
+    }
+  },
+  
+  // Mount host volumes for credentials and caching
+  "mounts": [
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.azure,target=/home/vscode/.azure,type=bind,consistency=cached",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/gcloud,target=/home/vscode/.config/gcloud,type=bind,consistency=cached",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
+    "source=terraform-cache,target=/home/vscode/.terraform.d/plugin-cache,type=volume"
+  ],
+  
+  // Use 'forwardPorts' to make a list of ports inside the container available locally
+  // "forwardPorts": [],
+  
+  // Features to add to the dev container
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest",
+      "ppa": false
+    }
+  },
+  
+  // Environment variables
+  "containerEnv": {
+    "TF_PLUGIN_CACHE_DIR": "/home/vscode/.terraform.d/plugin-cache"
+  }
 }
