@@ -1,40 +1,45 @@
-# Change Log
+# Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to the Terraform Development Environment will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/)
-and this project adheres to [Semantic Versioning](http://semver.org/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.1](https://github.com/awslabs/aws-terraform-dev-container/compare/v1.2.0...v1.2.1) (2023-01-06)
-
-
-### Bug Fixes
-
-* remove installation of tools, since there's no tf project ([9aad887](https://github.com/awslabs/aws-terraform-dev-container/commit/9aad88774ebebb4a5772e3aa9004e14b69e4eea9))
-
-## [1.2.0](https://github.com/awslabs/aws-terraform-dev-container/compare/v1.1.0...v1.2.0) (2023-01-06)
-
-
-### Features
-
-* create worfklow to release project ([0e83f23](https://github.com/awslabs/aws-terraform-dev-container/commit/0e83f2321dd530cc6fb575fc492ad0e828907367))
-
-
-### Bug Fixes
-
-* correct package name ([e32b5ce](https://github.com/awslabs/aws-terraform-dev-container/commit/e32b5ce3ee28e7da6421907445935275fe36d0d9))
-
-## [Unreleased]
-
-## [v1.1.0] - 2022-10-28
+## [1.2.2] - 2025-06-10
 
 ### Added
 
-- [Adopt AWS Code Habits](https://github.com/awslabs/aws-code-habits)
+- Initial release of the Terraform Development Environment
+- Multi-cloud support for AWS, Azure, and GCP
+- Terraform CLI v1.5.7
+- Supporting tools:
+  - terraform-docs v0.16.0
+  - tflint v0.47.0 with AWS, Azure, and GCP rulesets
+  - tfsec v1.28.0
+  - terrascan v1.18.3
+  - terragrunt v0.48.0
+  - infracost v0.10.28
+  - checkov v2.3.360
+- Cloud provider CLIs:
+  - AWS CLI v2
+  - Azure CLI
+  - Google Cloud SDK
+- Authentication helper scripts for AWS, Azure, and GCP
+- Pre-commit hooks for Terraform validation, formatting, and security scanning
+- VS Code tasks for common Terraform operations
+- VS Code settings and extensions for Terraform development
+- Persistent volume mounts for credentials and caching
+- Comprehensive documentation in README.md and USAGE.md
 
-## [v1.0.0] - 2022-10-14
+### Changed
 
-First release! 🚀
+- Updated from the base AWS Terraform Dev Container
+- Enhanced Dockerfile with modular installation scripts
+- Improved pre-commit configuration with additional hooks
+- Extended VS Code tasks and settings
 
-[unreleased]: https://github.com/awslabs/aws-terraform-dev-container/compare/v1.0.0...HEAD
-[1.1.0]: https://github.com/awslabs/aws-terraform-dev-container/compare/v1.0.0...v1.1.0
+### Fixed
+
+- Path issues in post-start script
+- Permission issues with credential directories
+- TFLint configuration for multi-cloud support
