@@ -4,17 +4,18 @@ set -e
 # This script installs Terraform and related tools
 
 # Versions
-TERRAFORM_VERSION=${1:-"1.5.7"}
-TERRAFORM_DOCS_VERSION=${2:-"0.16.0"}
-TFSEC_VERSION=${3:-"1.28.0"}
-TERRASCAN_VERSION=${4:-"1.18.3"}
-TFLINT_VERSION=${5:-"0.47.0"}
+TERRAFORM_VERSION=${1:-"1.12.1"}
+TERRAFORM_DOCS_VERSION=${2:-"0.20.0"}
+TFSEC_VERSION=${3:-"1.28.13"}
+TERRASCAN_VERSION=${4:-"1.19.9"}
+TFLINT_VERSION=${5:-"0.48.0"}
 TFLINT_AWS_RULESET_VERSION=${6:-"0.23.1"}
 TFLINT_AZURE_RULESET_VERSION=${7:-"0.23.0"}
 TFLINT_GCP_RULESET_VERSION=${8:-"0.23.1"}
-TERRAGRUNT_VERSION=${9:-"0.48.0"}
-INFRACOST_VERSION=${10:-"0.10.28"}
-CHECKOV_VERSION=${11:-"2.3.360"}
+TERRAGRUNT_VERSION=${9:-"0.50.1"}
+TERRATEST_VERSION=${10:-"0.49.0"}
+INFRACOST_VERSION=${11:-"0.10.41"}
+CHECKOV_VERSION=${12:-"3.2.439"}
 
 echo "Installing Terraform v${TERRAFORM_VERSION}..."
 curl -sSL -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
@@ -65,6 +66,32 @@ echo "Installing Terragrunt v${TERRAGRUNT_VERSION}..."
 curl -sSLo /tmp/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64"
 sudo mv /tmp/terragrunt /usr/local/bin/
 sudo chmod +x /usr/local/bin/terragrunt
+
+echo "Installing Terratest v${TERRATEST_VERSION}..."
+# Terratest is a Go library, so we'll set an environment variable to track the version
+echo "export TERRATEST_VERSION=${TERRATEST_VERSION}" >> /home/vscode/.bashrc
+
+# Install Go if not already installed
+if ! command -v go &> /dev/null; then
+    echo "Installing Go (required for Terratest)..."
+    GO_VERSION="1.20.5"
+    curl -sSLo /tmp/go.tar.gz "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"
+    sudo tar -C /usr/local -xzf /tmp/go.tar.gz
+    echo 'export PATH=$PATH:/usr/local/go/bin' >> /home/vscode/.bashrc
+    echo 'export PATH=$PATH:$HOME/go/bin' >> /home/vscode/.bashrc
+    rm -f /tmp/go.tar.gz
+fi
+
+# Create a simple wrapper script for terratest
+cat > /tmp/terratest << EOF
+#!/bin/bash
+echo "Terratest v${TERRATEST_VERSION}"
+echo "Terratest is a Go library for testing infrastructure code."
+echo "To use Terratest, add it to your Go project:"
+echo "go get github.com/gruntwork-io/terratest@v${TERRATEST_VERSION}"
+EOF
+sudo mv /tmp/terratest /usr/local/bin/
+sudo chmod +x /usr/local/bin/terratest
 
 echo "Installing Infracost v${INFRACOST_VERSION}..."
 curl -sSLo /tmp/infracost.tar.gz "https://github.com/infracost/infracost/releases/download/v${INFRACOST_VERSION}/infracost-linux-amd64.tar.gz"

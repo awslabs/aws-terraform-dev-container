@@ -4,22 +4,23 @@
     "dockerfile": "Dockerfile",
     "args": {
       "VARIANT": "ubuntu-22.04",
-      "TERRAFORM_VERSION": "1.5.7",
-      "TERRAFORM_DOCS_VERSION": "0.16.0",
-      "TFSEC_VERSION": "1.28.0",
-      "TERRASCAN_VERSION": "1.18.3",
-      "TFLINT_VERSION": "0.47.0",
+      "TERRAFORM_VERSION": "1.12.1",
+      "TERRAFORM_DOCS_VERSION": "0.20.0",
+      "TFSEC_VERSION": "1.28.13",
+      "TERRASCAN_VERSION": "1.19.9",
+      "TFLINT_VERSION": "0.48.0",
       "TFLINT_AWS_RULESET_VERSION": "0.23.1",
       "TFLINT_AZURE_RULESET_VERSION": "0.23.0",
       "TFLINT_GCP_RULESET_VERSION": "0.23.1",
-      "TERRAGRUNT_VERSION": "0.48.0",
-      "INFRACOST_VERSION": "0.10.28",
-      "CHECKOV_VERSION": "2.3.360"
+      "TERRAGRUNT_VERSION": "0.50.1",
+      "TERRATEST_VERSION": "0.49.0",
+      "INFRACOST_VERSION": "0.10.41",
+      "CHECKOV_VERSION": "3.2.439"
     }
   },
   "postStartCommand": "post-start",
   "remoteUser": "vscode",
-  
+
   // Configure tool-specific properties
   "customizations": {
     "vscode": {
@@ -44,7 +45,7 @@
         "ms-python.python",
         "ms-python.vscode-pylance"
       ],
-      
+
       // Set *default* container specific settings.json values on container create
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
@@ -61,7 +62,7 @@
         "files.trimTrailingWhitespace": true,
         "files.insertFinalNewline": true,
         "files.trimFinalNewlines": true,
-        
+
         // Terraform settings
         "[terraform]": {
           "editor.defaultFormatter": "hashicorp.terraform",
@@ -78,14 +79,14 @@
           "args": []
         },
         "terraform.experimentalFeatures.validateOnSave": true,
-        
+
         // YAML settings
         "[yaml]": {
           "editor.defaultFormatter": "redhat.vscode-yaml",
           "editor.formatOnSave": true,
           "editor.tabSize": 2
         },
-        
+
         // Markdown settings
         "[markdown]": {
           "editor.defaultFormatter": "yzhang.markdown-all-in-one",
@@ -94,7 +95,7 @@
       }
     }
   },
-  
+
   // Mount host volumes for credentials and caching
   "mounts": [
     "source=${localEnv:HOME}${localEnv:USERPROFILE}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
@@ -103,10 +104,10 @@
     "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
     "source=terraform-cache,target=/home/vscode/.terraform.d/plugin-cache,type=volume"
   ],
-  
+
   // Use 'forwardPorts' to make a list of ports inside the container available locally
   // "forwardPorts": [],
-  
+
   // Features to add to the dev container
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
@@ -115,7 +116,7 @@
       "ppa": false
     }
   },
-  
+
   // Environment variables
   "containerEnv": {
     "TF_PLUGIN_CACHE_DIR": "/home/vscode/.terraform.d/plugin-cache"

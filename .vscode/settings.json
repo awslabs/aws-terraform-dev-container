@@ -6,9 +6,9 @@
   "editor.rulers": [120],
   "editor.renderWhitespace": "boundary",
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": "explicit"
   },
-  
+
   // Files settings
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
@@ -22,7 +22,7 @@
     "**/.terraform": true,
     ".terraform.lock.hcl": true
   },
-  
+
   // Terraform settings
   "[terraform]": {
     "editor.defaultFormatter": "hashicorp.terraform",
@@ -39,20 +39,20 @@
     "args": []
   },
   "terraform.experimentalFeatures.validateOnSave": true,
-  
+
   // YAML settings
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml",
     "editor.formatOnSave": true,
     "editor.tabSize": 2
   },
-  
+
   // Markdown settings
   "[markdown]": {
     "editor.defaultFormatter": "yzhang.markdown-all-in-one",
     "editor.formatOnSave": true
   },
-  
+
   // Terminal settings
   "terminal.integrated.defaultProfile.linux": "bash",
   "terminal.integrated.profiles.linux": {
@@ -60,12 +60,12 @@
       "path": "/bin/bash"
     }
   },
-  
+
   // Git settings
   "git.autofetch": true,
   "git.enableSmartCommit": true,
   "git.confirmSync": false,
-  
+
   // Spell checker settings
   "cSpell.enabled": true,
   "cSpell.words": [

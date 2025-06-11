@@ -5,6 +5,25 @@ All notable changes to the Terraform Development Environment will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.3] - 2025-06-11
+
+### Added
+
+- Added terratest v0.49.0 for infrastructure testing
+
+### Changed
+
+- Updated tool versions:
+  - Terraform CLI from v1.5.7 to v1.12.1
+  - AWS CLI from v2 to v2.27.26
+  - terraform-docs from v0.16.0 to v0.20.0
+  - tflint from v0.47.0 to v0.48.0
+  - tfsec from v1.28.0 to v1.28.13
+  - terrascan from v1.18.3 to v1.19.9
+  - terragrunt from v0.48.0 to v0.50.1
+  - infracost from v0.10.28 to v0.10.41
+  - checkov from v2.3.360 to v3.2.439
+
 ## [1.2.2] - 2025-06-10
 
 ### Added

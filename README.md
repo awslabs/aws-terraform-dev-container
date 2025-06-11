@@ -36,17 +36,18 @@ A comprehensive VS Code Dev Container with tools to help you build and manage in
 
 | Tool | Version | Description |
 |------|---------|-------------|
-| Terraform | 1.5.7 | Infrastructure as Code tool |
-| AWS CLI | v2 | Command line interface for AWS |
+| Terraform | 1.12.1 | Infrastructure as Code tool |
+| AWS CLI | 2.27.26 | Command line interface for AWS |
 | Azure CLI | Latest | Command line interface for Azure |
 | Google Cloud SDK | Latest | Command line interface for GCP |
-| terraform-docs | 0.16.0 | Documentation generator for Terraform modules |
-| tflint | 0.47.0 | Terraform linter |
-| tfsec | 1.28.0 | Security scanner for Terraform code |
-| terrascan | 1.18.3 | Detect compliance and security violations |
-| terragrunt | 0.48.0 | Thin wrapper for Terraform that provides extra tools |
-| infracost | 0.10.28 | Cloud cost estimates for Terraform |
-| checkov | 2.3.360 | Static code analysis tool for IaC |
+| terraform-docs | 0.20.0 | Documentation generator for Terraform modules |
+| tflint | 0.48.0 | Terraform linter |
+| tfsec | 1.28.13 | Security scanner for Terraform code |
+| terrascan | 1.19.9 | Detect compliance and security violations |
+| terragrunt | 0.50.1 | Thin wrapper for Terraform that provides extra tools |
+| terratest | v0.49.0 | Testing utility for infrastructure code |
+| infracost | 0.10.41 | Cloud cost estimates for Terraform |
+| checkov | 3.2.439 | Static code analysis tool for IaC |
 | pre-commit | Latest | Framework for managing git pre-commit hooks |
 
 ## Authentication
