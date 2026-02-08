@@ -77,7 +77,9 @@ if ! command -v go &> /dev/null; then
     GO_VERSION="1.20.5"
     curl -sSLo /tmp/go.tar.gz "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"
     sudo tar -C /usr/local -xzf /tmp/go.tar.gz
+    #shellcheck disable=SC2016
     echo 'export PATH=$PATH:/usr/local/go/bin' >> /home/vscode/.bashrc
+    #shellcheck disable=SC2016
     echo 'export PATH=$PATH:$HOME/go/bin' >> /home/vscode/.bashrc
     rm -f /tmp/go.tar.gz
 fi
@@ -100,7 +102,7 @@ sudo mv /tmp/infracost-linux-amd64 /usr/local/bin/infracost
 rm -f /tmp/infracost.tar.gz
 
 echo "Installing Checkov v${CHECKOV_VERSION}..."
-pip3 install checkov==${CHECKOV_VERSION}
+pip3 install checkov=="${CHECKOV_VERSION}"
 
 # Create .tflint.hcl config file
 mkdir -p /home/vscode/.tflint.d
