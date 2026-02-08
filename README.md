@@ -57,13 +57,25 @@ This development container solves these problems by providing a ready-to-use, st
 ### Quick Start
 
 1. Clone this repository:
+
    ```bash
    git clone https://github.com/awslabs/aws-terraform-dev-container.git
    # or with SSH
    git clone git@github.com:awslabs/aws-terraform-dev-container.git
    ```
 
+   If you don't have these directories, create placeholders the container can mount in.
+
+   `mkdir -p ~/.aws ~/.ssh ~/.azure ~/.config/gcloud`
+
+   Verify your user has Docker rights
+
+   `docker run hello-world`
+
+   If that fails try: `sudo usermod -aG docker $USER` . The `newgrp docker` and run the `hello-world` again.
+
 2. Open the folder in VS Code:
+
    ```bash
    code aws-terraform-dev-container
    ```
@@ -116,21 +128,21 @@ This structure promotes code reuse, environment isolation, and easier testing.
 
 ## 🔧 Tools
 
-| Tool | Version | Description |
-|------|---------|-------------|
-| Terraform | 1.12.1 | Infrastructure as Code tool |
-| AWS CLI | 2.27.26 | Command line interface for AWS |
-| Azure CLI | Latest | Command line interface for Azure |
-| Google Cloud SDK | Latest | Command line interface for GCP |
-| terraform-docs | 0.20.0 | Documentation generator for Terraform modules |
-| tflint | 0.48.0 | Terraform linter |
-| tfsec | 1.28.13 | Security scanner for Terraform code |
-| terrascan | 1.19.9 | Detect compliance and security violations |
-| terragrunt | 0.50.1 | Thin wrapper for Terraform that provides extra tools |
-| terratest | v0.49.0 | Testing utility for infrastructure code |
-| infracost | 0.10.41 | Cloud cost estimates for Terraform |
-| checkov | 3.2.439 | Static code analysis tool for IaC |
-| pre-commit | Latest | Framework for managing git pre-commit hooks |
+| Tool             | Version | Description                                          |
+| ---------------- | ------- | ---------------------------------------------------- |
+| Terraform        | 1.12.1  | Infrastructure as Code tool                          |
+| AWS CLI          | 2.27.26 | Command line interface for AWS                       |
+| Azure CLI        | Latest  | Command line interface for Azure                     |
+| Google Cloud SDK | Latest  | Command line interface for GCP                       |
+| terraform-docs   | 0.20.0  | Documentation generator for Terraform modules        |
+| tflint           | 0.48.0  | Terraform linter                                     |
+| tfsec            | 1.28.13 | Security scanner for Terraform code                  |
+| terrascan        | 1.19.9  | Detect compliance and security violations            |
+| terragrunt       | 0.50.1  | Thin wrapper for Terraform that provides extra tools |
+| terratest        | v0.49.0 | Testing utility for infrastructure code              |
+| infracost        | 0.10.41 | Cloud cost estimates for Terraform                   |
+| checkov          | 3.2.439 | Static code analysis tool for IaC                    |
+| pre-commit       | Latest  | Framework for managing git pre-commit hooks          |
 
 ---
 
@@ -298,24 +310,28 @@ You can extend this development environment to suit your specific needs:
 <summary>Click to expand Use Cases</summary>
 
 ### Enterprise Infrastructure Teams
+
 - Standardize development environments across large teams
 - Enforce security and compliance policies through built-in tools
 - Simplify onboarding of new team members
 - Ensure consistent practices across multiple cloud providers
 
 ### DevOps Engineers
+
 - Rapidly prototype and test infrastructure changes
 - Validate changes before applying to production environments
 - Generate documentation automatically
 - Estimate costs before deploying resources
 
 ### Cloud Architects
+
 - Design and test multi-cloud architectures
 - Validate designs against security best practices
 - Create reusable infrastructure modules
 - Document architecture decisions
 
 ### Individual Developers
+
 - Learn Terraform and cloud infrastructure in a pre-configured environment
 - Experiment with different cloud providers without complex setup
 - Follow industry best practices from day one
@@ -331,18 +347,21 @@ You can extend this development environment to suit your specific needs:
 <summary>Click to expand Productivity Benefits</summary>
 
 ### Time Savings
+
 - **Environment Setup**: Save 4-8 hours per developer on initial setup
 - **Tool Updates**: Eliminate 1-2 hours per month maintaining tools
 - **Onboarding**: Reduce new team member onboarding from days to hours
 - **Troubleshooting**: Minimize environment-related issues that can waste hours of development time
 
 ### Quality Improvements
+
 - **Consistent Validation**: Every code change is automatically validated
 - **Security Scanning**: Catch security issues before they reach production
 - **Documentation**: Automatically generate and maintain documentation
 - **Testing**: Verify infrastructure works as expected with integrated testing tools
 
 ### Collaboration Enhancements
+
 - **Standardized Environment**: Everyone works with the same tools and versions
 - **Reproducible Results**: Eliminate "works on my machine" problems
 - **Knowledge Sharing**: Common toolset makes it easier to share techniques and solutions

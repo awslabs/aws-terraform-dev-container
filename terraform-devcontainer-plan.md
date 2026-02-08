@@ -10,25 +10,25 @@ flowchart TD
     A --> C[devcontainer.json]
     A --> D[Volume Mounts]
     A --> E[Environment Variables]
-    
+
     B --> B1[Base Image]
     B --> B2[Cloud CLIs]
     B --> B3[Terraform Tools]
     B --> B4[Supporting Tools]
-    
+
     C --> C1[Extensions]
     C --> C2[Settings]
     C --> C3[Post-Start Commands]
     C --> C4[Mount Configurations]
-    
+
     E --> E1[AWS Auth]
     E --> E2[Azure Auth]
     E --> E3[GCP Auth]
-    
+
     F[Pre-commit Hooks] --> F1[Terraform Validation]
     F --> F2[Security Checks]
     F --> F3[Formatting]
-    
+
     G[VS Code Tasks] --> G1[Terraform Workflows]
     G --> G2[Cloud Provider Tasks]
 ```

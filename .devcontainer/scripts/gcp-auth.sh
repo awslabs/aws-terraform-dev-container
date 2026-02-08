@@ -59,10 +59,10 @@ if [ -n "$CREDENTIALS_FILE" ]; then
         echo "Error: Credentials file not found: $CREDENTIALS_FILE"
         exit 1
     fi
-    
+
     export GOOGLE_APPLICATION_CREDENTIALS="$CREDENTIALS_FILE"
     echo "Using service account credentials: $CREDENTIALS_FILE"
-    
+
     # Activate service account
     gcloud auth activate-service-account --key-file="$CREDENTIALS_FILE"
 else

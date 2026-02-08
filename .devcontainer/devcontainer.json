@@ -21,10 +21,8 @@
   "postStartCommand": "post-start",
   "remoteUser": "vscode",
 
-  // Configure tool-specific properties
   "customizations": {
     "vscode": {
-      // Add the IDs of extensions you want installed when the container is created
       "extensions": [
         "hashicorp.terraform",
         "ms-azuretools.vscode-azureterraform",
@@ -46,7 +44,6 @@
         "ms-python.vscode-pylance"
       ],
 
-      // Set *default* container specific settings.json values on container create
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
         "terminal.integrated.profiles.linux": {
@@ -63,7 +60,6 @@
         "files.insertFinalNewline": true,
         "files.trimFinalNewlines": true,
 
-        // Terraform settings
         "[terraform]": {
           "editor.defaultFormatter": "hashicorp.terraform",
           "editor.formatOnSave": true,
@@ -80,14 +76,12 @@
         },
         "terraform.experimentalFeatures.validateOnSave": true,
 
-        // YAML settings
         "[yaml]": {
           "editor.defaultFormatter": "redhat.vscode-yaml",
           "editor.formatOnSave": true,
           "editor.tabSize": 2
         },
 
-        // Markdown settings
         "[markdown]": {
           "editor.defaultFormatter": "yzhang.markdown-all-in-one",
           "editor.formatOnSave": true
@@ -96,7 +90,6 @@
     }
   },
 
-  // Mount host volumes for credentials and caching
   "mounts": [
     "source=${localEnv:HOME}${localEnv:USERPROFILE}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
     "source=${localEnv:HOME}${localEnv:USERPROFILE}/.azure,target=/home/vscode/.azure,type=bind,consistency=cached",
@@ -105,10 +98,8 @@
     "source=terraform-cache,target=/home/vscode/.terraform.d/plugin-cache,type=volume"
   ],
 
-  // Use 'forwardPorts' to make a list of ports inside the container available locally
-  // "forwardPorts": [],
+  "forwardPorts": [],
 
-  // Features to add to the dev container
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/git:1": {
@@ -117,7 +108,6 @@
     }
   },
 
-  // Environment variables
   "containerEnv": {
     "TF_PLUGIN_CACHE_DIR": "/home/vscode/.terraform.d/plugin-cache"
   }

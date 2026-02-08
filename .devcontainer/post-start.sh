@@ -17,7 +17,8 @@ chmod +x /home/vscode/.devcontainer/scripts/*.sh
 
 # Display welcome message
 clear
-printf "\e[0;32mTerraform Development Environment: $(basename $PWD)\e[0m\n\n"
+#shellcheck disable=SC2059
+printf "\e[0;32mTerraform Development Environment: $(basename "$PWD")\e[0m\n\n"
 
 # Display installed tools and versions
 echo "=== Installed Tools ==="
