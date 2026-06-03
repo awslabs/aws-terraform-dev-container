@@ -56,11 +56,16 @@ This development container solves these problems by providing a ready-to-use, st
 
 ### Quick Start
 
-1. Clone this repository:
+1. Clone this repository (with submodules — the Makefile depends on the bundled `aws-code-habits` submodule under `habits/`):
    ```bash
-   git clone https://github.com/awslabs/aws-terraform-dev-container.git
+   git clone --recurse-submodules https://github.com/awslabs/aws-terraform-dev-container.git
    # or with SSH
-   git clone git@github.com:awslabs/aws-terraform-dev-container.git
+   git clone --recurse-submodules git@github.com:awslabs/aws-terraform-dev-container.git
+   ```
+
+   If you have already cloned without `--recurse-submodules`, run:
+   ```bash
+   git submodule update --init --recursive
    ```
 
 2. Open the folder in VS Code:
@@ -120,8 +125,8 @@ This structure promotes code reuse, environment isolation, and easier testing.
 |------|---------|-------------|
 | Terraform | 1.12.1 | Infrastructure as Code tool |
 | AWS CLI | 2.27.26 | Command line interface for AWS |
-| Azure CLI | Latest | Command line interface for Azure |
-| Google Cloud SDK | Latest | Command line interface for GCP |
+| Azure CLI | OS-provided (apt) [^1] | Command line interface for Azure |
+| Google Cloud SDK | OS-provided (apt) [^2] | Command line interface for GCP |
 | terraform-docs | 0.20.0 | Documentation generator for Terraform modules |
 | tflint | 0.48.0 | Terraform linter |
 | tfsec | 1.28.13 | Security scanner for Terraform code |
@@ -130,7 +135,11 @@ This structure promotes code reuse, environment isolation, and easier testing.
 | terratest | v0.49.0 | Testing utility for infrastructure code |
 | infracost | 0.10.41 | Cloud cost estimates for Terraform |
 | checkov | 3.2.439 | Static code analysis tool for IaC |
-| pre-commit | Latest | Framework for managing git pre-commit hooks |
+| pre-commit | Latest (pip) [^3] | Framework for managing git pre-commit hooks |
+
+[^1]: Installed from Microsoft's official apt repository. See [Install the Azure CLI on Linux](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux).
+[^2]: Installed from Google Cloud's official apt repository. See [Install the gcloud CLI](https://cloud.google.com/sdk/docs/install#deb).
+[^3]: Installed via `pip install pre-commit` during container build. To pin a specific version, edit `.devcontainer/library-scripts/common-utils.sh`.
 
 ---
 
@@ -188,6 +197,10 @@ pre-commit install
 ---
 
 ## ⚙️ Configuration
+
+### Tool Versions
+
+Tool versions are pinned in `.devcontainer/devcontainer.json` build args, with matching values in `tools.env` and `.pre-commit-config.yaml`. To upgrade a tool, edit the corresponding build arg and rebuild the container.
 
 ### Environment Variables
 
@@ -371,6 +384,10 @@ The container includes the following volume mounts:
 - **Secret Detection**: Automated detection is enabled to prevent committing sensitive information
 - **Compliance Checking**: Built-in tools validate infrastructure against compliance standards
 - **Least Privilege**: Authentication helpers encourage following least privilege principles
+
+### Verifying Tool Integrity
+
+All binary downloads in the container build are verified against published SHA256 checksums (see `.devcontainer/library-scripts/terraform-tools.sh`). The base Docker image is pinned to a specific minor version rather than a floating tag, and third-party GitHub Actions used in CI are pinned to commit SHAs. Cloud-provider CLIs (Azure CLI, Google Cloud SDK) are installed from their vendors' official apt repositories with `signed-by=` keyrings instead of piping `curl` into `sudo bash`.
 
 ---
 
