@@ -1,9 +1,22 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-# This script installs Terraform and related tools
-
-# Versions
+# This script installs Terraform and related tools.
+#
+# Hardening notes (2026-06):
+#   Every binary download is checksum-verified. Where upstream publishes a
+#   per-release checksum file (HashiCorp *_SHA256SUMS, GitHub release
+#   `checksums.txt`, golang.org's dl JSON), we fetch that file at install
+#   time and feed it to `sha256sum -c`. A few smaller tools that publish a
+#   single per-asset `.sha256` file are handled the same way.
+#
+#   Trust model: we trust the TLS endpoint that serves the checksum file.
+#   This matches the publisher's own documented verification path and is
+#   strictly stronger than the previous "download blob, hope for the best"
+#   posture. For HashiCorp tools an additional GPG verification of
+#   *_SHA256SUMS.sig is possible but is intentionally out of scope here.
+#
+# Versions (do not change defaults — Dockerfile passes 12 positional args)
 TERRAFORM_VERSION=${1:-"1.12.1"}
 TERRAFORM_DOCS_VERSION=${2:-"0.20.0"}
 TFSEC_VERSION=${3:-"1.28.13"}
@@ -17,53 +30,133 @@ TERRATEST_VERSION=${10:-"0.49.0"}
 INFRACOST_VERSION=${11:-"0.10.41"}
 CHECKOV_VERSION=${12:-"3.2.439"}
 
+# Pinned Go version used to back terratest. The SHA256 is taken from
+# https://go.dev/dl/?mode=json&include=all (file go1.20.5.linux-amd64.tar.gz).
+GO_VERSION="1.20.5"
+GO_LINUX_AMD64_SHA256="d7ec48cde0d3d2be2c69203bc3e0a44de8660b9c09a6e85c4732a3f7dc442612"
+
+# Always clear the workspace tmp on exit so a partial download never lingers
+cleanup() {
+    rm -f \
+        /tmp/terraform.zip /tmp/terraform_SHA256SUMS \
+        /tmp/terraform-docs.tar.gz /tmp/terraform-docs.sha256sum \
+        /tmp/tfsec /tmp/tfsec_checksums.txt \
+        /tmp/terrascan.tar.gz /tmp/terrascan_checksums.txt \
+        /tmp/tflint.zip /tmp/tflint_checksums.txt \
+        /tmp/tflint-aws-ruleset.zip /tmp/tflint-aws-ruleset_checksums.txt \
+        /tmp/tflint-azure-ruleset.zip /tmp/tflint-azure-ruleset_checksums.txt \
+        /tmp/tflint-gcp-ruleset.zip /tmp/tflint-gcp-ruleset_checksums.txt \
+        /tmp/terragrunt /tmp/terragrunt_SHA256SUMS \
+        /tmp/infracost.tar.gz /tmp/infracost.tar.gz.sha256 \
+        /tmp/go.tar.gz
+}
+trap cleanup EXIT
+
+# verify_sha256 <file> <expected-sha256>
+# Verifies that <file> hashes to <expected-sha256>. Exits non-zero on mismatch.
+verify_sha256() {
+    local file="$1"
+    local expected="$2"
+    echo "${expected}  ${file}" | sha256sum -c -
+}
+
+# verify_from_sums_file <file> <basename-in-sums> <sums-file>
+# Looks up <basename-in-sums> inside <sums-file> and verifies <file> against it.
+verify_from_sums_file() {
+    local file="$1"
+    local basename_in_sums="$2"
+    local sums_file="$3"
+    local expected
+    expected="$(grep -E "[[:space:]]\\*?${basename_in_sums}\$" "${sums_file}" | awk '{print $1}' | head -n1)"
+    if [[ -z "${expected}" ]]; then
+        echo "ERROR: could not find checksum for ${basename_in_sums} in ${sums_file}" >&2
+        return 1
+    fi
+    verify_sha256 "${file}" "${expected}"
+}
+
 echo "Installing Terraform v${TERRAFORM_VERSION}..."
-curl -sSL -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
+curl -fsSL -o /tmp/terraform.zip \
+    "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
+curl -fsSL -o /tmp/terraform_SHA256SUMS \
+    "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS"
+verify_from_sums_file /tmp/terraform.zip \
+    "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" /tmp/terraform_SHA256SUMS
 unzip -qq /tmp/terraform.zip -d /tmp
 sudo mv /tmp/terraform /usr/local/bin/
-rm -f /tmp/terraform.zip
 
 echo "Installing terraform-docs v${TERRAFORM_DOCS_VERSION}..."
-curl -sSLo /tmp/terraform-docs.tar.gz "https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz"
+curl -fsSL -o /tmp/terraform-docs.tar.gz \
+    "https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz"
+curl -fsSL -o /tmp/terraform-docs.sha256sum \
+    "https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}.sha256sum"
+verify_from_sums_file /tmp/terraform-docs.tar.gz \
+    "terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz" /tmp/terraform-docs.sha256sum
 tar -xzf /tmp/terraform-docs.tar.gz -C /tmp
 sudo mv /tmp/terraform-docs /usr/local/bin/
-rm -f /tmp/terraform-docs.tar.gz
 
 echo "Installing tfsec v${TFSEC_VERSION}..."
-curl -sSLo /tmp/tfsec "https://github.com/aquasecurity/tfsec/releases/download/v${TFSEC_VERSION}/tfsec-linux-amd64"
+curl -fsSL -o /tmp/tfsec \
+    "https://github.com/aquasecurity/tfsec/releases/download/v${TFSEC_VERSION}/tfsec-linux-amd64"
+curl -fsSL -o /tmp/tfsec_checksums.txt \
+    "https://github.com/aquasecurity/tfsec/releases/download/v${TFSEC_VERSION}/tfsec_checksums.txt"
+verify_from_sums_file /tmp/tfsec "tfsec-linux-amd64" /tmp/tfsec_checksums.txt
 sudo mv /tmp/tfsec /usr/local/bin/
 sudo chmod +x /usr/local/bin/tfsec
 
 echo "Installing terrascan v${TERRASCAN_VERSION}..."
-curl -sSLo /tmp/terrascan.tar.gz "https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz"
+curl -fsSL -o /tmp/terrascan.tar.gz \
+    "https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz"
+curl -fsSL -o /tmp/terrascan_checksums.txt \
+    "https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/checksums.txt"
+verify_from_sums_file /tmp/terrascan.tar.gz \
+    "terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz" /tmp/terrascan_checksums.txt
 tar -xzf /tmp/terrascan.tar.gz -C /tmp
 sudo mv /tmp/terrascan /usr/local/bin/
-rm -f /tmp/terrascan.tar.gz
 
 echo "Installing tflint v${TFLINT_VERSION}..."
-curl -sSLo /tmp/tflint.zip "https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip"
+curl -fsSL -o /tmp/tflint.zip \
+    "https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip"
+curl -fsSL -o /tmp/tflint_checksums.txt \
+    "https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/checksums.txt"
+verify_from_sums_file /tmp/tflint.zip "tflint_linux_amd64.zip" /tmp/tflint_checksums.txt
 unzip -qq /tmp/tflint.zip -d /tmp
 sudo mv /tmp/tflint /usr/local/bin/
-rm -f /tmp/tflint.zip
 
 echo "Installing TFLint AWS ruleset v${TFLINT_AWS_RULESET_VERSION}..."
 mkdir -p ~/.tflint.d/plugins
-curl -sSLo /tmp/tflint-aws-ruleset.zip "https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v${TFLINT_AWS_RULESET_VERSION}/tflint-ruleset-aws_linux_amd64.zip"
+curl -fsSL -o /tmp/tflint-aws-ruleset.zip \
+    "https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v${TFLINT_AWS_RULESET_VERSION}/tflint-ruleset-aws_linux_amd64.zip"
+curl -fsSL -o /tmp/tflint-aws-ruleset_checksums.txt \
+    "https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v${TFLINT_AWS_RULESET_VERSION}/checksums.txt"
+verify_from_sums_file /tmp/tflint-aws-ruleset.zip \
+    "tflint-ruleset-aws_linux_amd64.zip" /tmp/tflint-aws-ruleset_checksums.txt
 unzip -qq /tmp/tflint-aws-ruleset.zip -d ~/.tflint.d/plugins
-rm -f /tmp/tflint-aws-ruleset.zip
 
 echo "Installing TFLint Azure ruleset v${TFLINT_AZURE_RULESET_VERSION}..."
-curl -sSLo /tmp/tflint-azure-ruleset.zip "https://github.com/terraform-linters/tflint-ruleset-azurerm/releases/download/v${TFLINT_AZURE_RULESET_VERSION}/tflint-ruleset-azurerm_linux_amd64.zip"
+curl -fsSL -o /tmp/tflint-azure-ruleset.zip \
+    "https://github.com/terraform-linters/tflint-ruleset-azurerm/releases/download/v${TFLINT_AZURE_RULESET_VERSION}/tflint-ruleset-azurerm_linux_amd64.zip"
+curl -fsSL -o /tmp/tflint-azure-ruleset_checksums.txt \
+    "https://github.com/terraform-linters/tflint-ruleset-azurerm/releases/download/v${TFLINT_AZURE_RULESET_VERSION}/checksums.txt"
+verify_from_sums_file /tmp/tflint-azure-ruleset.zip \
+    "tflint-ruleset-azurerm_linux_amd64.zip" /tmp/tflint-azure-ruleset_checksums.txt
 unzip -qq /tmp/tflint-azure-ruleset.zip -d ~/.tflint.d/plugins
-rm -f /tmp/tflint-azure-ruleset.zip
 
 echo "Installing TFLint GCP ruleset v${TFLINT_GCP_RULESET_VERSION}..."
-curl -sSLo /tmp/tflint-gcp-ruleset.zip "https://github.com/terraform-linters/tflint-ruleset-google/releases/download/v${TFLINT_GCP_RULESET_VERSION}/tflint-ruleset-google_linux_amd64.zip"
+curl -fsSL -o /tmp/tflint-gcp-ruleset.zip \
+    "https://github.com/terraform-linters/tflint-ruleset-google/releases/download/v${TFLINT_GCP_RULESET_VERSION}/tflint-ruleset-google_linux_amd64.zip"
+curl -fsSL -o /tmp/tflint-gcp-ruleset_checksums.txt \
+    "https://github.com/terraform-linters/tflint-ruleset-google/releases/download/v${TFLINT_GCP_RULESET_VERSION}/checksums.txt"
+verify_from_sums_file /tmp/tflint-gcp-ruleset.zip \
+    "tflint-ruleset-google_linux_amd64.zip" /tmp/tflint-gcp-ruleset_checksums.txt
 unzip -qq /tmp/tflint-gcp-ruleset.zip -d ~/.tflint.d/plugins
-rm -f /tmp/tflint-gcp-ruleset.zip
 
 echo "Installing Terragrunt v${TERRAGRUNT_VERSION}..."
-curl -sSLo /tmp/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64"
+curl -fsSL -o /tmp/terragrunt \
+    "https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64"
+curl -fsSL -o /tmp/terragrunt_SHA256SUMS \
+    "https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/SHA256SUMS"
+verify_from_sums_file /tmp/terragrunt "terragrunt_linux_amd64" /tmp/terragrunt_SHA256SUMS
 sudo mv /tmp/terragrunt /usr/local/bin/
 sudo chmod +x /usr/local/bin/terragrunt
 
@@ -73,13 +166,12 @@ echo "export TERRATEST_VERSION=${TERRATEST_VERSION}" >> /home/vscode/.bashrc
 
 # Install Go if not already installed
 if ! command -v go &> /dev/null; then
-    echo "Installing Go (required for Terratest)..."
-    GO_VERSION="1.20.5"
-    curl -sSLo /tmp/go.tar.gz "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"
+    echo "Installing Go v${GO_VERSION} (required for Terratest)..."
+    curl -fsSL -o /tmp/go.tar.gz "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"
+    verify_sha256 /tmp/go.tar.gz "${GO_LINUX_AMD64_SHA256}"
     sudo tar -C /usr/local -xzf /tmp/go.tar.gz
     echo 'export PATH=$PATH:/usr/local/go/bin' >> /home/vscode/.bashrc
     echo 'export PATH=$PATH:$HOME/go/bin' >> /home/vscode/.bashrc
-    rm -f /tmp/go.tar.gz
 fi
 
 # Create a simple wrapper script for terratest
@@ -94,13 +186,18 @@ sudo mv /tmp/terratest /usr/local/bin/
 sudo chmod +x /usr/local/bin/terratest
 
 echo "Installing Infracost v${INFRACOST_VERSION}..."
-curl -sSLo /tmp/infracost.tar.gz "https://github.com/infracost/infracost/releases/download/v${INFRACOST_VERSION}/infracost-linux-amd64.tar.gz"
+curl -fsSL -o /tmp/infracost.tar.gz \
+    "https://github.com/infracost/infracost/releases/download/v${INFRACOST_VERSION}/infracost-linux-amd64.tar.gz"
+curl -fsSL -o /tmp/infracost.tar.gz.sha256 \
+    "https://github.com/infracost/infracost/releases/download/v${INFRACOST_VERSION}/infracost-linux-amd64.tar.gz.sha256"
+# Infracost publishes a single-line per-asset .sha256 in `<sum>  <filename>` form.
+verify_from_sums_file /tmp/infracost.tar.gz \
+    "infracost-linux-amd64.tar.gz" /tmp/infracost.tar.gz.sha256
 tar -xzf /tmp/infracost.tar.gz -C /tmp
 sudo mv /tmp/infracost-linux-amd64 /usr/local/bin/infracost
-rm -f /tmp/infracost.tar.gz
 
 echo "Installing Checkov v${CHECKOV_VERSION}..."
-pip3 install checkov==${CHECKOV_VERSION}
+pip3 install "checkov==${CHECKOV_VERSION}"
 
 # Create .tflint.hcl config file
 mkdir -p /home/vscode/.tflint.d
