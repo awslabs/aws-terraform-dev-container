@@ -1,5 +1,7 @@
 ARG VARIANT="jammy"
-FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
+# Pinned base image for reproducible builds.
+# For newer tags, see: https://mcr.microsoft.com/v2/vscode/devcontainers/base/tags/list
+FROM mcr.microsoft.com/vscode/devcontainers/base:2.0.5-${VARIANT}
 
 # Set versions as arguments
 ARG TERRAFORM_VERSION="1.12.1"
