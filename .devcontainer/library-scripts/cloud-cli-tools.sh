@@ -13,6 +13,23 @@ set -euo pipefail
 #     https://learn.microsoft.com/cli/azure/install-azure-cli-linux?pivots=apt
 #   - Google Cloud SDK: dearmor the apt key into /usr/share/keyrings and
 #     reference it via `signed-by=`, replacing the deprecated `apt-key add`.
+#
+# Architecture support (2026-06):
+#   Detect the build host arch via `dpkg --print-architecture` and pick
+#   per-tool naming. This lets the same Dockerfile build natively on amd64
+#   and arm64 (e.g. Apple Silicon) without producing a mixed-arch image.
+DPKG_ARCH="$(dpkg --print-architecture)"
+case "${DPKG_ARCH}" in
+    amd64) ;;
+    arm64) ;;
+    *) echo "Unsupported architecture: ${DPKG_ARCH}" >&2; exit 1 ;;
+esac
+
+# AWS CLI v2 installer uses x86_64 / aarch64 (Linux kernel naming).
+case "${DPKG_ARCH}" in
+    amd64) AWSCLI_ARCH="x86_64" ;;
+    arm64) AWSCLI_ARCH="aarch64" ;;
+esac
 
 # Always clean up tmp artifacts on exit (success or failure)
 cleanup() {
@@ -21,9 +38,9 @@ cleanup() {
 trap cleanup EXIT
 
 # Install AWS CLI v2
-echo "Installing AWS CLI v2..."
-curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip
-curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip.sig" -o /tmp/awscliv2.sig
+echo "Installing AWS CLI v2 (${AWSCLI_ARCH})..."
+curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-${AWSCLI_ARCH}.zip" -o /tmp/awscliv2.zip
+curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-${AWSCLI_ARCH}.zip.sig" -o /tmp/awscliv2.sig
 
 # Pinned AWS CLI Team OpenPGP public key (RSA 4096, key id A6310ACC4672475C).
 # This block is reproduced verbatim from the AWS CLI install docs so that the
@@ -76,7 +93,7 @@ echo "Installing Azure CLI..."
 curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
     | sudo gpg --dearmor -o /usr/share/keyrings/microsoft.gpg
 AZ_REPO="$(lsb_release -cs)"
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ ${AZ_REPO} main" \
+echo "deb [arch=${DPKG_ARCH} signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ ${AZ_REPO} main" \
     | sudo tee /etc/apt/sources.list.d/azure-cli.list > /dev/null
 sudo apt-get update
 sudo apt-get install -y azure-cli
