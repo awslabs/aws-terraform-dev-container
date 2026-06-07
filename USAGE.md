@@ -10,6 +10,28 @@ This guide describes how to work in the Terraform Development Environment dev co
 
 When the container starts, the post-start command clears the terminal and prints the installed tool versions, the working directory, and hints for authenticating to each cloud provider.
 
+The following diagram shows how the running container is wired to the host. Credential directories are bind-mounted from the host, and the Terraform plugin cache is a named Docker volume:
+
+```mermaid
+flowchart TB
+    subgraph Host["Host"]
+        Creds["~/.aws, ~/.azure, ~/.config/gcloud, ~/.ssh"]
+        Cache["terraform-cache volume"]
+    end
+
+    subgraph Container["Dev container (Ubuntu 22.04)"]
+        Tools["Terraform + cloud CLIs + linting, security, and test tools"]
+        Scripts["aws-auth.sh, azure-auth.sh, gcp-auth.sh"]
+        Env["terraform.env environment variables"]
+    end
+
+    Creds -->|bind mount| Container
+    Cache -->|TF_PLUGIN_CACHE_DIR| Container
+    Scripts -->|read and write credentials| Creds
+    Env --> Tools
+    Tools -->|terraform init, plan, apply| Cloud["AWS, Azure, GCP"]
+```
+
 After the container is running, complete the initial setup:
 
 1. Authenticate to a cloud provider (see [Authenticate to a cloud provider](#authenticate-to-a-cloud-provider)).
