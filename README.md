@@ -177,6 +177,19 @@ The container also sets `TF_PLUGIN_CACHE_DIR` through the `containerEnv` block i
 
 ## How it works
 
+The following diagram shows how you go from opening the repository to a ready Terraform environment:
+
+```mermaid
+flowchart LR
+    Dev["Developer"] --> Code["VS Code + Dev Containers extension"]
+    Code -->|Reopen in Container| Build["Build image from .devcontainer/Dockerfile"]
+    Build --> Tools["Install Terraform, cloud CLIs, and supporting tools"]
+    Tools --> Start["postStartCommand runs post-start"]
+    Start --> Ready["Terraform environment ready"]
+    Ready --> Auth[".devcontainer/scripts/*-auth.sh"]
+    Ready --> Tf["terraform init, plan, apply"]
+```
+
 The container is built from `.devcontainer/Dockerfile`, which starts from a pinned Microsoft VS Code dev container base image (Ubuntu 22.04) and runs three library scripts:
 
 - `common-utils.sh` installs common packages and `pre-commit`.
