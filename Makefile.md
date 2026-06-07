@@ -1,6 +1,33 @@
-## Make
+# Make targets
 
+The `Makefile` in this repository is small. It inherits its targets from the [aws-code-habits](https://github.com/awslabs/aws-code-habits) submodule mounted under `habits/`:
+
+```makefile
+export WORKSPACE = $(shell pwd)
+export HABITS    = $(WORKSPACE)/habits
+
+include $(WORKSPACE)/tools.env
+include $(HABITS)/lib/make/Makefile
+include $(HABITS)/lib/make/*/Makefile
 ```
+
+You must initialize the submodule before any `make` target runs. If you cloned without `--recurse-submodules`, run:
+
+```bash
+git submodule update --init --recursive
+```
+
+To list the available targets, run:
+
+```bash
+make help
+```
+
+## Available targets
+
+The list below is the output of `make help` after the submodule is initialized. The targets come from `aws-code-habits`. This repository's continuous integration (CI) exercises only a subset of them — the install and `doc/build` targets used in `.github/workflows/test.yml` and `.github/workflows/hygiene.yml`. Treat the rest as best-effort.
+
+```text
 Available targets:
 
   aws/cfn-lint/install                Install AWS CloudFormation Linter
@@ -94,5 +121,6 @@ Available targets:
   tfswitch/version                    Display tfswitch version
   ubuntu/install                      Install most common packages
   ubuntu/update                       Update and upgrade Ubuntu packages
-
 ```
+
+> **Note:** This list is generated from the `aws-code-habits` submodule. When the submodule updates, the available targets can change. Run `make help` for the current list.
