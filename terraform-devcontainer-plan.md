@@ -1,8 +1,10 @@
-# Terraform Development Environment Plan
+# Terraform Development Environment design plan
+
+This document records the original design plan for the Terraform Development Environment dev container, which supports AWS, Microsoft Azure, and Google Cloud Platform (GCP). It is a historical design reference, not a description of the current state. For what the container ships today, see [README.md](README.md); for tool versions, see the configuration section of the README and `.devcontainer/devcontainer.json`.
 
 ## Overview
 
-This document outlines a comprehensive plan for creating a robust Terraform development environment using VS Code Dev Containers with support for AWS, Azure, and GCP.
+The plan describes a VS Code dev container for Terraform with a Dockerfile, a `devcontainer.json`, volume mounts, environment variables, pre-commit hooks, and VS Code tasks.
 
 ```mermaid
 flowchart TD
@@ -10,169 +12,137 @@ flowchart TD
     A --> C[devcontainer.json]
     A --> D[Volume Mounts]
     A --> E[Environment Variables]
-    
+
     B --> B1[Base Image]
     B --> B2[Cloud CLIs]
     B --> B3[Terraform Tools]
     B --> B4[Supporting Tools]
-    
+
     C --> C1[Extensions]
     C --> C2[Settings]
     C --> C3[Post-Start Commands]
     C --> C4[Mount Configurations]
-    
+
     E --> E1[AWS Auth]
     E --> E2[Azure Auth]
     E --> E3[GCP Auth]
-    
+
     F[Pre-commit Hooks] --> F1[Terraform Validation]
     F --> F2[Security Checks]
     F --> F3[Formatting]
-    
+
     G[VS Code Tasks] --> G1[Terraform Workflows]
     G --> G2[Cloud Provider Tasks]
 ```
 
-## 1. Dockerfile Configuration
+## Dockerfile
 
-### Base Image Selection
-- Use the official Microsoft VS Code Dev Container base image with Ubuntu 22.04 (jammy)
-- Include essential build tools and development libraries
+### Base image
 
-### Tool Installation
-- **Terraform CLI**: Latest stable version with version pinning
-- **Cloud Provider CLIs**:
-  - AWS CLI v2
-  - Azure CLI
-  - Google Cloud SDK
-- **Terraform Supporting Tools**:
-  - tflint (with AWS, Azure, and GCP rulesets)
-  - terraform-docs
-  - tfsec
-  - terrascan
-  - terragrunt
-  - infracost
-  - checkov
+- Use the official Microsoft VS Code dev container base image on Ubuntu 22.04 (jammy).
+- Include the build tools and development libraries the tool installers need.
 
-### Version Pinning Strategy
-- Pin all tool versions to specific releases for reproducibility
-- Include a mechanism to easily update versions when needed
+### Tools
 
-## 2. devcontainer.json Configuration
+- Terraform CLI, with version pinning.
+- Cloud-provider CLIs: AWS CLI v2, Azure CLI, and Google Cloud SDK.
+- Terraform supporting tools: `tflint` (with the AWS, Azure, and GCP rulesets), `terraform-docs`, `tfsec`, `terrascan`, `terragrunt`, `infracost`, and `checkov`.
+
+### Version pinning
+
+- Pin tool versions to specific releases for reproducible builds.
+- Provide a way to update versions when needed.
+
+## devcontainer.json
 
 ### Extensions
-- HashiCorp Terraform
-- Azure Terraform
-- Terraform doc snippets
-- YAML support
-- Git Graph
-- Git History
-- GitLens
-- Docker
-- Remote Containers
-- Code Spell Checker
-- Markdown All in One
+
+HashiCorp Terraform, Azure Terraform, Terraform doc snippets, YAML support, Git Graph, Git History, GitLens, Docker, Remote Containers, Code Spell Checker, and Markdown All in One.
 
 ### Settings
-- Configure Terraform formatting settings
-- Set up terminal profiles for each cloud provider
-- Configure editor settings for optimal Terraform development
+
+- Configure Terraform formatting.
+- Set up a terminal profile.
+- Configure editor settings for Terraform development.
 
 ### Features
-- Enable GitHub CLI
-- Configure Git with credential forwarding
 
-### Mount Configurations
-- Set up persistent volume mounts for:
-  - ~/.aws
-  - ~/.azure
-  - ~/.config/gcloud
-  - ~/.ssh
-  - ~/.terraform.d/plugin-cache
+- Enable the GitHub CLI.
+- Configure Git with credential forwarding.
 
-## 3. Pre-commit Hooks Configuration
+### Mounts
 
-### Terraform-specific Hooks
-- terraform fmt
-- terraform validate
-- terraform-docs
-- tflint
-- tfsec
-- checkov
+Set up persistent mounts for `~/.aws`, `~/.azure`, `~/.config/gcloud`, `~/.ssh`, and `~/.terraform.d/plugin-cache`.
 
-### General Code Quality Hooks
-- Trailing whitespace removal
-- End-of-file fixing
-- Large file checking
-- Merge conflict detection
-- YAML/JSON validation
+## Pre-commit hooks
 
-## 4. Environment Variables Configuration
+### Terraform hooks
 
-### AWS Authentication
-- AWS_PROFILE
-- AWS_REGION
-- AWS_SDK_LOAD_CONFIG
+`terraform fmt`, `terraform validate`, `terraform-docs`, `tflint`, `tfsec`, and `checkov`.
 
-### Azure Authentication
-- ARM_SUBSCRIPTION_ID
-- ARM_TENANT_ID
-- ARM_CLIENT_ID
-- ARM_CLIENT_SECRET (with secure handling)
+### General hooks
 
-### GCP Authentication
-- GOOGLE_APPLICATION_CREDENTIALS
-- CLOUDSDK_CORE_PROJECT
+Trailing-whitespace removal, end-of-file fixing, large-file checks, merge-conflict detection, and YAML/JSON validation.
 
-### Terraform Configuration
-- TF_PLUGIN_CACHE_DIR
-- TF_CLI_ARGS
-- TF_LOG (for debugging)
+## Environment variables
 
-## 5. VS Code tasks.json Configuration
+### AWS
 
-### Terraform Workflow Tasks
-- terraform init
-- terraform plan
-- terraform apply
-- terraform destroy
-- terraform validate
-- terraform fmt
+`AWS_PROFILE`, `AWS_REGION`, `AWS_SDK_LOAD_CONFIG`.
 
-### Cloud-specific Tasks
-- AWS login/logout
-- Azure login/logout
-- GCP login/logout
-- Cloud resource listing tasks
+### Azure
 
-## 6. Performance Optimization
+`ARM_SUBSCRIPTION_ID`, `ARM_TENANT_ID`, `ARM_CLIENT_ID`, `ARM_CLIENT_SECRET` (handled securely).
 
-### Container Resource Allocation
-- Configure appropriate memory limits
-- Set CPU allocation based on host capabilities
+### GCP
 
-### Caching Strategies
-- Terraform plugin caching
-- Provider CLI caching
-- Docker layer optimization
+`GOOGLE_APPLICATION_CREDENTIALS`, `CLOUDSDK_CORE_PROJECT`.
 
-### Volume Mount Performance
-- Use delegated consistency for non-critical mounts
-- Use cached consistency for read-heavy directories
+### Terraform
 
-## 7. Security Considerations
+`TF_PLUGIN_CACHE_DIR`, `TF_CLI_ARGS`, `TF_LOG` (for debugging).
 
-### Credential Management
-- Use environment variables over hardcoded credentials
-- Implement credential helpers for cloud providers
-- Configure .gitignore for sensitive files
+## VS Code tasks
 
-### Secret Scanning
-- Implement pre-commit hooks for secret detection
-- Configure tfsec for security scanning
-- Set up checkov for compliance checking
+### Terraform workflow tasks
 
-## Implementation Approach
+`terraform init`, `terraform plan`, `terraform apply`, `terraform destroy`, `terraform validate`, and `terraform fmt`.
+
+### Cloud-provider tasks
+
+AWS, Azure, and GCP login, and cloud resource listing.
+
+## Performance
+
+### Resource allocation
+
+Set memory limits and CPU allocation based on the host's capabilities.
+
+### Caching
+
+Cache Terraform plugins and provider CLIs, and optimize Docker layers.
+
+### Volume mount performance
+
+Use delegated consistency for non-critical mounts and cached consistency for read-heavy directories.
+
+## Security
+
+### Credential management
+
+- Prefer environment variables over hardcoded credentials.
+- Use credential helpers for cloud providers.
+- Configure `.gitignore` for sensitive files.
+
+### Secret scanning
+
+- Add a pre-commit hook for secret detection.
+- Configure `tfsec` for security scanning.
+- Configure `checkov` for compliance checking.
+
+## Implementation timeline
+
+This timeline is part of the original plan and is kept for historical reference. The dates do not reflect the project's actual progress.
 
 ```mermaid
 gantt
@@ -192,9 +162,9 @@ gantt
     Validate functionality      :d2, after d1, 1d
 ```
 
-## File Structure
+## File structure
 
-```
+```text
 .devcontainer/
 ├── Dockerfile
 ├── devcontainer.json
@@ -217,12 +187,12 @@ gantt
 .pre-commit-config.yaml
 ```
 
-## Next Steps
+## Next steps
 
-1. Create the Dockerfile with all required tools and proper versioning
-2. Configure the devcontainer.json with extensions and settings
-3. Set up the persistent volume mounts for credentials and caching
-4. Implement the pre-commit hooks for Terraform validation
-5. Configure the environment variables for cloud provider authentication
-6. Create the VS Code tasks.json for common Terraform workflows
-7. Test and optimize the container performance
+1. Create the Dockerfile with the required tools and version pinning.
+2. Configure `devcontainer.json` with extensions and settings.
+3. Set up the persistent volume mounts for credentials and caching.
+4. Add the pre-commit hooks for Terraform validation.
+5. Configure the environment variables for cloud-provider authentication.
+6. Create `tasks.json` for the common Terraform workflows.
+7. Test and tune the container's performance.

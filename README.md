@@ -1,102 +1,231 @@
-<img src="doc/logo.png" alt="Terraform Development Environment Logo" width="200"/>
+<img src="doc/logo.png" alt="Terraform Development Environment logo" width="200"/>
 
 # Terraform Development Environment
 
-[![GitHub stars](https://img.shields.io/github/stars/awslabs/aws-terraform-dev-container?style=social)](https://github.com/awslabs/aws-terraform-dev-container/stargazers)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Latest Release](https://img.shields.io/github/v/release/awslabs/aws-terraform-dev-container)](https://github.com/awslabs/aws-terraform-dev-container/releases)
+A Visual Studio Code dev container that gives you a pre-configured environment for developing, testing, and deploying Terraform infrastructure as code across AWS, Microsoft Azure, and Google Cloud Platform (GCP).
 
-A comprehensive VS Code Dev Container providing a consistent, pre-configured environment for developing, testing, and deploying infrastructure as code with Terraform across AWS, Azure, and GCP.
+[![License: MIT-0](https://img.shields.io/badge/License-MIT--0-yellow.svg)](LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/awslabs/aws-terraform-dev-container)](https://github.com/awslabs/aws-terraform-dev-container/releases)
 
-> **Boost your infrastructure development productivity with a ready-to-use, standardized environment that works the same way for everyone on your team, across all major cloud providers.**
+## Overview
 
-## Quick Links
+This repository packages a [Visual Studio Code dev container](https://code.visualstudio.com/docs/devcontainers/containers) for Terraform development. When you open the repository in VS Code and reopen it in the container, you get a Docker image with Terraform, the AWS, Azure, and GCP command line interfaces, and a suite of Terraform linting, security, testing, and cost-estimation tools already installed and pinned to known versions.
 
-- [Features](#-features) | [Prerequisites](#-prerequisites) | [Getting Started](#-getting-started)
-- [Tools](#-tools) | [Authentication](#-authentication) | [Configuration](#️-configuration)
-- [Contributing](#-contributing) | [License](#-license) | [Getting Help](#-getting-help)
+The container addresses the setup and consistency problems that come with infrastructure as code work: every contributor runs the same tool versions, credential directories are mounted from the host instead of stored in the image, and pre-commit hooks enforce formatting and security scanning before code is committed. It is intended for infrastructure engineers, platform teams, and anyone learning Terraform who wants a reproducible environment without installing tools on the host.
 
----
+The image targets Linux containers on the `linux/amd64` and `linux/arm64` architectures.
 
-## 🔍 The Problem We're Solving
+## Features
 
-Infrastructure as code (IaC) development with Terraform presents several challenges:
+- Multi-cloud command line tooling: AWS CLI v2, Azure CLI, and Google Cloud SDK.
+- Terraform and supporting tools: `terraform`, `terraform-docs`, `tflint` (with AWS, Azure, and GCP rulesets), `tfsec`, `terrascan`, `terragrunt`, Terratest, `infracost`, `checkov`, and `pre-commit`.
+- VS Code integration: pre-installed extensions, editor settings, and tasks for common Terraform and authentication workflows.
+- Pre-commit hooks for Terraform formatting, validation, documentation, security scanning, and secret detection.
+- Host credential mounts for AWS, Azure, GCP, and SSH, so credentials stay on the host.
+- A persistent Terraform plugin cache to speed up repeated `terraform init` runs.
 
-- **Environment Setup Complexity**: Time-consuming and error-prone setup process
-- **Cross-Cloud Development**: Managing different CLIs and authentication methods
-- **Security and Compliance**: Ensuring code meets security standards
-- **Team Consistency**: Maintaining consistent environments across team members
-- **Onboarding Friction**: New team members often spend days configuring their environment
+## Prerequisites
 
-This development container solves these problems by providing a ready-to-use, standardized environment with all necessary tools pre-configured.
+- [Docker](https://www.docker.com/products/docker-desktop/) — runs the container.
+- [Visual Studio Code](https://code.visualstudio.com/) — the supported editor.
+- The [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) (included in the [Remote Development extension pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)).
+- [Git](https://git-scm.com/) — clones the repository and its submodule.
 
----
+## Installation
 
-## 🌟 Features
+You can use the dev container in two ways: open this repository directly, or add the container to an existing Terraform project.
 
-- ☁️ **Multi-cloud Support**: Pre-installed CLIs and tools for AWS, Azure, and GCP
-- 🛠️ **Complete Terraform Ecosystem**: Comprehensive suite of tools including terraform-docs, tflint, tfsec, and more
-- 🔒 **Security and Compliance**: Pre-commit hooks for security scanning and compliance checking
-- 💻 **Enhanced Developer Experience**: VS Code integration with tasks, settings, and extensions
-- ⚡ **Performance Optimization**: Caching strategies and optimized volume mounts
-- 🧪 **Testing and Validation**: Built-in tools for testing infrastructure code
-- 💰 **Cost Management**: Integrated cost estimation with Infracost
+### Open this repository
 
----
+Clone the repository with submodules. The `Makefile` depends on the bundled [aws-code-habits](https://github.com/awslabs/aws-code-habits) submodule under `habits/`:
 
-## 🔍 Prerequisites
+```bash
+git clone --recurse-submodules https://github.com/awslabs/aws-terraform-dev-container.git
+```
 
-- [Docker](https://www.docker.com/products/docker-desktop/) - Required for running containers
-- [Visual Studio Code](https://code.visualstudio.com/) - The recommended IDE
-- [VS Code Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) - Required for Dev Containers
+To clone over SSH:
 
----
+```bash
+git clone --recurse-submodules git@github.com:awslabs/aws-terraform-dev-container.git
+```
 
-## 🚀 Getting Started
+If you already cloned the repository without `--recurse-submodules`, initialize the submodule:
 
-### Quick Start
+```bash
+git submodule update --init --recursive
+```
 
-1. Clone this repository (with submodules — the Makefile depends on the bundled `aws-code-habits` submodule under `habits/`):
-   ```bash
-   git clone --recurse-submodules https://github.com/awslabs/aws-terraform-dev-container.git
-   # or with SSH
-   git clone --recurse-submodules git@github.com:awslabs/aws-terraform-dev-container.git
-   ```
+### Add the container to an existing project
 
-   If you have already cloned without `--recurse-submodules`, run:
-   ```bash
-   git submodule update --init --recursive
-   ```
+From the root of an existing Terraform project, run the bootstrap script. It copies the `.devcontainer/` directory into your project and adds `aws-code-habits` as a submodule (or a plain clone if the directory is not a Git repository):
 
-2. Open the folder in VS Code:
+```bash
+curl -fsSL https://raw.githubusercontent.com/awslabs/aws-terraform-dev-container/main/scripts/init.sh | bash
+```
+
+Review [`scripts/init.sh`](scripts/init.sh) before you run it.
+
+## Getting started
+
+1. Open the project folder in VS Code:
+
    ```bash
    code aws-terraform-dev-container
    ```
 
-3. When prompted, click "Reopen in Container" or use the command palette (F1) and select "Remote-Containers: Reopen in Container"
+2. When VS Code prompts you, select **Reopen in Container**. You can also open the command palette (`F1`) and run **Dev Containers: Reopen in Container**.
 
-4. Wait for the container to build and initialize (this may take a few minutes the first time)
+3. Wait for the container to build. The first build downloads the base image and installs the tools, which can take several minutes.
 
-5. Start developing with all tools pre-configured and ready to use!
+4. When the container starts, the post-start command clears the terminal and prints the installed tool versions, the working directory, and authentication hints.
 
-<img src="doc/images/screenshot-1.gif" alt="Dev Container in Action" width="600"/>
+<img src="doc/images/screenshot-1.gif" alt="Dev container in action" width="600"/>
 
-### Recommended Workflow
+Once the container is running, authenticate to a cloud provider and initialize Terraform:
 
-1. **Initialize your project**: Use VS Code tasks to run `terraform init`
-2. **Install pre-commit hooks**: Run `pre-commit install` to set up automated validation
-3. **Develop iteratively**: Make small changes and validate frequently
-4. **Validate changes**: Use the pre-configured tasks for linting, security scanning, and validation
-5. **Generate documentation**: Use terraform-docs to keep documentation up-to-date
-6. **Estimate costs**: Run Infracost before applying changes to understand cost implications
-7. **Test your infrastructure**: Use Terratest to write and run tests for your infrastructure
-8. **Review and apply**: After thorough validation, apply your changes to the target environment
-
-### Project Structure Best Practices
-
-We recommend organizing your Terraform projects like this:
-
+```bash
+.devcontainer/scripts/aws-auth.sh
+terraform init
 ```
+
+For a full walkthrough, see [USAGE.md](USAGE.md).
+
+## Usage
+
+You run Terraform and its supporting tools from the integrated terminal, or through VS Code tasks. To run a task, open the command palette (`Ctrl+Shift+P`, or `Cmd+Shift+P` on macOS), select **Tasks: Run Task**, then choose a task.
+
+The container defines these tasks in [`.vscode/tasks.json`](.vscode/tasks.json):
+
+| Task | Command |
+| --- | --- |
+| Terraform: Init | `terraform init` |
+| Terraform: Plan | `terraform plan -out=tfplan` |
+| Terraform: Apply | `terraform apply tfplan` |
+| Terraform: Apply (Auto-approve) | `terraform apply -auto-approve` |
+| Terraform: Destroy | `terraform destroy` |
+| Terraform: Validate | `terraform validate` |
+| Terraform: Format | `terraform fmt -recursive` |
+| Terraform: Clean | Remove `.terraform/`, the lock file, state files, and `tfplan` |
+| TFLint: Run | `tflint` |
+| TFSec: Run | `tfsec .` |
+| Checkov: Run | `checkov -d .` |
+| Pre-commit: Run All Hooks | `pre-commit run --all-files` |
+| AWS: Login | `.devcontainer/scripts/aws-auth.sh` |
+| AWS: Login with SSO | `.devcontainer/scripts/aws-auth.sh --sso` |
+| Azure: Login | `.devcontainer/scripts/azure-auth.sh` |
+| GCP: Login | `.devcontainer/scripts/gcp-auth.sh` |
+
+To authenticate to a cloud provider from the terminal, run the matching helper script:
+
+```bash
+.devcontainer/scripts/aws-auth.sh [--profile PROFILE] [--region REGION] [--sso]
+.devcontainer/scripts/azure-auth.sh [--subscription SUBSCRIPTION_ID] [--tenant TENANT_ID] [--service-principal --client-id CLIENT_ID --client-secret CLIENT_SECRET]
+.devcontainer/scripts/gcp-auth.sh [--project PROJECT_ID] [--credentials FILE_PATH]
+```
+
+To install the pre-commit hooks in your repository:
+
+```bash
+pre-commit install
+```
+
+For the complete usage reference — the Terraform workflow, multi-environment patterns, and pre-commit hooks — see [USAGE.md](USAGE.md). For the `make` targets inherited from `aws-code-habits`, see [Makefile.md](Makefile.md).
+
+## Configuration
+
+### Tool versions
+
+Tool versions are pinned as build arguments in [`.devcontainer/devcontainer.json`](.devcontainer/devcontainer.json) and the [`.devcontainer/Dockerfile`](.devcontainer/Dockerfile). To change a version, edit the corresponding build argument and rebuild the container (**Dev Containers: Rebuild Container**). The repository ships these versions:
+
+| Tool | Version | Description |
+| --- | --- | --- |
+| Terraform | 1.12.1 | Infrastructure as code tool. |
+| AWS CLI | v2 | Command line interface for AWS. |
+| Azure CLI | OS-provided (apt) [^1] | Command line interface for Azure. |
+| Google Cloud SDK | OS-provided (apt) [^2] | Command line interface for GCP. |
+| terraform-docs | 0.20.0 | Documentation generator for Terraform modules. |
+| tflint | 0.48.0 | Terraform linter. |
+| tfsec | 1.28.13 | Security scanner for Terraform code. |
+| terrascan | 1.19.9 | Compliance and security violation detector. |
+| terragrunt | 0.50.1 | Wrapper that adds tooling around Terraform. |
+| Terratest | 0.49.0 | Go testing library for infrastructure code. |
+| infracost | 0.10.41 | Cost estimates for Terraform. |
+| checkov | 3.2.439 | Static analysis for infrastructure as code. |
+| pre-commit | Latest (pip) [^3] | Framework for managing Git pre-commit hooks. |
+
+[^1]: Installed from Microsoft's official apt repository. See [Install the Azure CLI on Linux](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux).
+[^2]: Installed from Google Cloud's official apt repository. See [Install the gcloud CLI](https://cloud.google.com/sdk/docs/install#deb).
+[^3]: Installed with `pip install pre-commit` during the container build. To pin a version, edit `.devcontainer/library-scripts/common-utils.sh`.
+
+### Environment variables
+
+You configure Terraform and cloud-provider environment variables in [`.devcontainer/config/terraform.env`](.devcontainer/config/terraform.env). The post-start command sources this file when the container starts. The file ships with the Terraform variables set and the cloud-provider variables commented out:
+
+- Terraform: `TF_PLUGIN_CACHE_DIR`, `TF_CLI_ARGS_init`, `TF_CLI_ARGS_plan`, `TF_CLI_ARGS_apply`, `TF_LOG`.
+- AWS: `AWS_PROFILE`, `AWS_REGION`, `AWS_SDK_LOAD_CONFIG`.
+- Azure: `ARM_SUBSCRIPTION_ID`, `ARM_TENANT_ID`, `ARM_CLIENT_ID`, `ARM_CLIENT_SECRET`.
+- GCP: `GOOGLE_APPLICATION_CREDENTIALS`, `CLOUDSDK_CORE_PROJECT`.
+
+The container also sets `TF_PLUGIN_CACHE_DIR` through the `containerEnv` block in `devcontainer.json`.
+
+### VS Code settings, extensions, and hooks
+
+- Edit `.vscode/settings.json` to change editor settings.
+- Edit the `customizations.vscode.extensions` list in `devcontainer.json` to change installed extensions.
+- Edit `.pre-commit-config.yaml` to change the pre-commit hooks.
+- Edit the `.devcontainer/Dockerfile` and add a script under `.devcontainer/library-scripts/` to install additional tools.
+
+## How it works
+
+The following diagram shows how you go from opening the repository to a ready Terraform environment:
+
+```mermaid
+flowchart LR
+    Dev["Developer"] --> Code["VS Code + Dev Containers extension"]
+    Code -->|Reopen in Container| Build["Build image from .devcontainer/Dockerfile"]
+    Build --> Tools["Install Terraform, cloud CLIs, and supporting tools"]
+    Tools --> Start["postStartCommand runs post-start"]
+    Start --> Ready["Terraform environment ready"]
+    Ready --> Auth[".devcontainer/scripts/*-auth.sh"]
+    Ready --> Tf["terraform init, plan, apply"]
+```
+
+The container is built from `.devcontainer/Dockerfile`, which starts from a pinned Microsoft VS Code dev container base image (Ubuntu 22.04) and runs three library scripts:
+
+- `common-utils.sh` installs common packages and `pre-commit`.
+- `cloud-cli-tools.sh` installs the AWS, Azure, and GCP command line interfaces.
+- `terraform-tools.sh` installs Terraform and its ecosystem, verifying each binary download against a published SHA256 checksum.
+
+The container mounts the host credential directories (`~/.aws`, `~/.azure`, `~/.config/gcloud`, `~/.ssh`) and a named Docker volume for the Terraform plugin cache. The `postStartCommand` runs `post-start`, which loads the environment variables and prints the welcome banner. The GitHub CLI and Git are added through dev container features.
+
+For the original design plan, see [terraform-devcontainer-plan.md](terraform-devcontainer-plan.md).
+
+### Security considerations
+
+- Credentials are mounted from the host rather than stored in the image.
+- Binary downloads in the build are verified against published SHA256 checksums (see `.devcontainer/library-scripts/terraform-tools.sh`).
+- The base image is pinned to a specific minor version rather than a floating tag, and third-party GitHub Actions used in continuous integration (CI) are pinned to commit SHAs.
+- Cloud-provider CLIs (Azure CLI, Google Cloud SDK) are installed from their vendors' official apt repositories with `signed-by=` keyrings.
+- Pre-commit hooks run security scanning and secret detection before code is committed.
+
+## Recommended workflow
+
+A typical iteration inside the container:
+
+1. Initialize your project — run `terraform init` (or the **Terraform: Init** task).
+2. Install the pre-commit hooks — `pre-commit install` — so validation runs automatically.
+3. Develop iteratively, making small changes and validating frequently.
+4. Validate changes with the linting, security-scanning, and validation tasks.
+5. Keep documentation current with `terraform-docs`.
+6. Estimate costs with Infracost before you apply.
+7. Test infrastructure behavior with Terratest.
+8. Review, then apply your changes to the target environment.
+
+### Suggested project structure
+
+The tools in this container work well with a per-environment, module-oriented layout:
+
+```text
 project/
 ├── environments/
 │   ├── dev/
@@ -117,325 +246,69 @@ project/
 
 This structure promotes code reuse, environment isolation, and easier testing.
 
----
-
-## 🔧 Tools
-
-| Tool | Version | Description |
-|------|---------|-------------|
-| Terraform | 1.12.1 | Infrastructure as Code tool |
-| AWS CLI | 2.27.26 | Command line interface for AWS |
-| Azure CLI | OS-provided (apt) [^1] | Command line interface for Azure |
-| Google Cloud SDK | OS-provided (apt) [^2] | Command line interface for GCP |
-| terraform-docs | 0.20.0 | Documentation generator for Terraform modules |
-| tflint | 0.48.0 | Terraform linter |
-| tfsec | 1.28.13 | Security scanner for Terraform code |
-| terrascan | 1.19.9 | Detect compliance and security violations |
-| terragrunt | 0.50.1 | Thin wrapper for Terraform that provides extra tools |
-| terratest | v0.49.0 | Testing utility for infrastructure code |
-| infracost | 0.10.41 | Cloud cost estimates for Terraform |
-| checkov | 3.2.439 | Static code analysis tool for IaC |
-| pre-commit | Latest (pip) [^3] | Framework for managing git pre-commit hooks |
-
-[^1]: Installed from Microsoft's official apt repository. See [Install the Azure CLI on Linux](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux).
-[^2]: Installed from Google Cloud's official apt repository. See [Install the gcloud CLI](https://cloud.google.com/sdk/docs/install#deb).
-[^3]: Installed via `pip install pre-commit` during container build. To pin a specific version, edit `.devcontainer/library-scripts/common-utils.sh`.
-
----
-
-## 🔐 Authentication
-
-The container includes helper scripts for authenticating with each cloud provider:
-
-### AWS Authentication
-
-```bash
-.devcontainer/scripts/aws-auth.sh [--profile PROFILE] [--region REGION] [--sso]
-```
-
-### Azure Authentication
-
-```bash
-.devcontainer/scripts/azure-auth.sh [--subscription SUBSCRIPTION_ID] [--tenant TENANT_ID] [--service-principal] [--client-id CLIENT_ID] [--client-secret CLIENT_SECRET]
-```
-
-### GCP Authentication
-
-```bash
-.devcontainer/scripts/gcp-auth.sh [--project PROJECT_ID] [--credentials FILE_PATH]
-```
-
----
-
-## 📋 VS Code Tasks
-
-The environment includes pre-configured VS Code tasks for common operations:
-
-- **Terraform: Init** - Initialize a Terraform working directory
-- **Terraform: Plan** - Generate and show an execution plan
-- **Terraform: Apply** - Build or change infrastructure
-- **Terraform: Destroy** - Destroy Terraform-managed infrastructure
-- **Terraform: Validate** - Validate the Terraform files
-- **Terraform: Format** - Rewrite Terraform configuration files to canonical format
-- **TFLint: Run** - Run TFLint for static analysis
-- **TFSec: Run** - Run TFSec for security scanning
-- **Checkov: Run** - Run Checkov for compliance checks
-- **Pre-commit: Run All Hooks** - Run all pre-commit hooks
-
-To run a task, press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS) and select "Tasks: Run Task", then choose the task you want to run.
-
----
-
-## 🔄 Pre-commit Hooks
-
-The environment includes pre-configured pre-commit hooks for Terraform validation, formatting, and security scanning. To install the hooks:
-
-```bash
-pre-commit install
-```
-
----
-
-## ⚙️ Configuration
-
-### Tool Versions
-
-Tool versions are pinned in `.devcontainer/devcontainer.json` build args, with matching values in `tools.env` and `.pre-commit-config.yaml`. To upgrade a tool, edit the corresponding build arg and rebuild the container.
-
-### Environment Variables
-
-Environment variables for Terraform and cloud providers can be configured in `.devcontainer/config/terraform.env`. The following variables are available:
-
-#### Terraform Configuration
-
-- `TF_PLUGIN_CACHE_DIR` - Directory for caching Terraform plugins
-- `TF_CLI_ARGS_init` - Arguments for `terraform init`
-- `TF_CLI_ARGS_plan` - Arguments for `terraform plan`
-- `TF_CLI_ARGS_apply` - Arguments for `terraform apply`
-- `TF_LOG` - Terraform logging level
-
-#### AWS Provider Configuration
-
-- `AWS_PROFILE` - AWS profile to use
-- `AWS_REGION` - AWS region to use
-- `AWS_SDK_LOAD_CONFIG` - Load config from AWS config file
-
-#### Azure Provider Configuration
-
-- `ARM_SUBSCRIPTION_ID` - Azure subscription ID
-- `ARM_TENANT_ID` - Azure tenant ID
-- `ARM_CLIENT_ID` - Azure client ID
-- `ARM_CLIENT_SECRET` - Azure client secret
-
-#### GCP Provider Configuration
-
-- `GOOGLE_APPLICATION_CREDENTIALS` - Path to GCP service account key file
-- `CLOUDSDK_CORE_PROJECT` - GCP project ID
-
-### Customization
-
-#### Adding Custom Tools
-
-To add custom tools to the container, modify the `.devcontainer/Dockerfile` and add your installation commands.
-
-#### Customizing VS Code Settings
-
-VS Code settings can be customized in `.vscode/settings.json`.
-
-#### Customizing Pre-commit Hooks
-
-Pre-commit hooks can be customized in `.pre-commit-config.yaml`.
-
----
-
-## 💻 Advanced Usage
+## Advanced usage
 
 <details>
-<summary>Click to expand Advanced Usage details</summary>
+<summary>How the tools fit together, and how to extend the environment</summary>
 
-### Tool Integration
+The bundled tools are intended to be used as a pipeline:
 
-This development environment is designed with tool integration in mind. Here's how the tools work together:
+- **Development** — write Terraform in VS Code with syntax highlighting and IntelliSense, keep formatting consistent with `terraform fmt` (via tasks or pre-commit), validate syntax with `terraform validate`, and check best practices with `tflint`.
+- **Security and compliance** — scan with `tfsec`, check compliance with `terrascan` and `checkov`, and detect secrets through the pre-commit hooks.
+- **Testing** — write infrastructure tests with Terratest and validate behavior before deployment.
+- **Deployment** — estimate cost with Infracost, plan with `terraform plan`, apply with `terraform apply`, and manage larger deployments with Terragrunt.
 
-1. **Development Flow**:
-   - Write Terraform code in VS Code with syntax highlighting and IntelliSense
-   - Use terraform fmt (via tasks or pre-commit) to maintain consistent formatting
-   - Validate syntax with terraform validate
-   - Check for best practices with tflint
-   - Generate documentation automatically with terraform-docs
+To extend the environment:
 
-2. **Security and Compliance Flow**:
-   - Scan for security issues with tfsec
-   - Check compliance with terrascan and checkov
-   - Detect secrets with pre-commit hooks
-   - All integrated into the pre-commit workflow
-
-3. **Testing Flow**:
-   - Write infrastructure tests with Terratest
-   - Validate infrastructure behavior before deployment
-   - Ensure infrastructure meets requirements
-
-4. **Deployment Flow**:
-   - Estimate costs with Infracost
-   - Plan changes with terraform plan
-   - Apply changes with terraform apply
-   - Manage complex deployments with Terragrunt
-
-### Extending the Environment
-
-You can extend this development environment to suit your specific needs:
-
-1. **Adding Custom Tools**:
-   - Modify the Dockerfile to add additional tools
-   - Add custom scripts to the scripts directory
-   - Configure additional VS Code extensions in devcontainer.json
-
-2. **Team Customization**:
-   - Fork this repository for your team
-   - Add team-specific configurations and tools
-   - Share custom modules and examples
-   - Configure team-specific pre-commit hooks
-
-3. **CI/CD Integration**:
-   - Use the same tools in your CI/CD pipelines
-   - Export configurations from the dev container to CI/CD
-   - Ensure consistency between development and automation
+- **Add tools** — edit the `.devcontainer/Dockerfile`, add a script under `.devcontainer/library-scripts/`, and add any VS Code extensions in `devcontainer.json`.
+- **Customize for a team** — fork the repository, add team-specific configuration, modules, examples, and pre-commit hooks.
+- **Align with CI/CD** — use the same pinned tools in your pipelines so development and automation stay consistent.
 
 </details>
 
----
-
-## 📊 Use Cases
+## Use cases
 
 <details>
-<summary>Click to expand Use Cases</summary>
+<summary>Who this environment is for</summary>
 
-### Enterprise Infrastructure Teams
-- Standardize development environments across large teams
-- Enforce security and compliance policies through built-in tools
-- Simplify onboarding of new team members
-- Ensure consistent practices across multiple cloud providers
-
-### DevOps Engineers
-- Rapidly prototype and test infrastructure changes
-- Validate changes before applying to production environments
-- Generate documentation automatically
-- Estimate costs before deploying resources
-
-### Cloud Architects
-- Design and test multi-cloud architectures
-- Validate designs against security best practices
-- Create reusable infrastructure modules
-- Document architecture decisions
-
-### Individual Developers
-- Learn Terraform and cloud infrastructure in a pre-configured environment
-- Experiment with different cloud providers without complex setup
-- Follow industry best practices from day one
-- Focus on code rather than tooling
+- **Enterprise infrastructure teams** — standardize environments across large teams, enforce security and compliance through built-in tooling, simplify onboarding, and keep practices consistent across cloud providers.
+- **DevOps engineers** — prototype and test infrastructure changes quickly, validate before production, generate documentation, and estimate cost before deploying.
+- **Cloud architects** — design and test multi-cloud architectures, validate against security best practices, build reusable modules, and document decisions.
+- **Individual developers** — learn Terraform in a pre-configured environment, experiment across providers without complex setup, and follow best practices from the start.
 
 </details>
 
----
-
-## 📈 Productivity Benefits
+## Productivity benefits
 
 <details>
-<summary>Click to expand Productivity Benefits</summary>
+<summary>Why teams adopt a shared dev container</summary>
 
-### Time Savings
-- **Environment Setup**: Save 4-8 hours per developer on initial setup
-- **Tool Updates**: Eliminate 1-2 hours per month maintaining tools
-- **Onboarding**: Reduce new team member onboarding from days to hours
-- **Troubleshooting**: Minimize environment-related issues that can waste hours of development time
-
-### Quality Improvements
-- **Consistent Validation**: Every code change is automatically validated
-- **Security Scanning**: Catch security issues before they reach production
-- **Documentation**: Automatically generate and maintain documentation
-- **Testing**: Verify infrastructure works as expected with integrated testing tools
-
-### Collaboration Enhancements
-- **Standardized Environment**: Everyone works with the same tools and versions
-- **Reproducible Results**: Eliminate "works on my machine" problems
-- **Knowledge Sharing**: Common toolset makes it easier to share techniques and solutions
-- **Cross-Platform**: Works the same way on Windows, macOS, and Linux
+- **Time savings** — removes hours of per-developer setup, eliminates ongoing tool-maintenance overhead, and shortens onboarding from days to hours.
+- **Quality** — every change is validated, security issues are caught before production, documentation stays current, and infrastructure is tested.
+- **Collaboration** — everyone runs the same tool versions, results are reproducible (no "works on my machine"), and a common toolset makes knowledge sharing easier across Windows, macOS, and Linux.
 
 </details>
 
----
+## Troubleshooting
 
-## 💾 Volume Mounts
+| Issue | Resolution |
+| --- | --- |
+| Docker is not running. | Start Docker on your host before you reopen the folder in the container. |
+| The container fails to build. | Increase the memory Docker is allowed to use, then rebuild. |
+| Authentication fails. | Confirm your credentials with `aws sts get-caller-identity`, `az account show`, or `gcloud auth list`. |
+| Volume mounts are empty. | Confirm the source directories (`~/.aws`, `~/.azure`, `~/.config/gcloud`, `~/.ssh`) exist on the host. |
+| `make` targets do not run. | Initialize the submodule with `git submodule update --init --recursive`. |
 
-The container includes the following volume mounts:
+To view the container build log, select the **Remote** indicator in the bottom-left corner of VS Code and choose **Show Container Log**. For more guidance, see the Troubleshooting section of [USAGE.md](USAGE.md).
 
-- `~/.aws` - AWS credentials and configuration
-- `~/.azure` - Azure credentials and configuration
-- `~/.config/gcloud` - GCP credentials and configuration
-- `~/.ssh` - SSH keys
-- `terraform-cache` - Terraform plugin cache
+## Contributing
 
----
+See [Contributing](CONTRIBUTING.md) for how to propose changes.
 
-## 🔒 Security Considerations
+## Security
 
-- **Credential Isolation**: Credentials are mounted from the host to avoid storing them in the container
-- **Automated Scanning**: Pre-commit hooks include security scanning for Terraform code
-- **Secret Detection**: Automated detection is enabled to prevent committing sensitive information
-- **Compliance Checking**: Built-in tools validate infrastructure against compliance standards
-- **Least Privilege**: Authentication helpers encourage following least privilege principles
+See [Security](SECURITY.md) for how to report a vulnerability.
 
-### Verifying Tool Integrity
+## License
 
-All binary downloads in the container build are verified against published SHA256 checksums (see `.devcontainer/library-scripts/terraform-tools.sh`). The base Docker image is pinned to a specific minor version rather than a floating tag, and third-party GitHub Actions used in CI are pinned to commit SHAs. Cloud-provider CLIs (Azure CLI, Google Cloud SDK) are installed from their vendors' official apt repositories with `signed-by=` keyrings instead of piping `curl` into `sudo bash`.
-
----
-
-## ❓ Troubleshooting
-
-### Common Issues
-
-1. **Docker not running**: Ensure Docker is running on your system
-2. **Permission issues**: Ensure you have the necessary permissions for the mounted volumes
-3. **Authentication failures**: Check your credentials and ensure they are properly configured
-4. **Resource constraints**: Increase Docker's allocated memory if container builds fail
-5. **Network issues**: Verify your network can access required repositories and cloud services
-
-### Logs
-
-Container logs can be viewed in VS Code by clicking on the "Remote" indicator in the bottom-left corner and selecting "Show Container Log".
-
----
-
-## ❓ Getting Help
-
-### Documentation and Resources
-
-- **Official Documentation**: Refer to the [USAGE.md](USAGE.md) file for detailed usage instructions
-- **Issue Tracker**: Report bugs or request features through the [GitHub Issues](https://github.com/awslabs/aws-terraform-dev-container/issues)
-- **Community Support**: Join discussions in the [Discussions](https://github.com/awslabs/aws-terraform-dev-container/discussions) section
-
-### Learning Resources
-
-- **Terraform Documentation**: [Terraform Docs](https://www.terraform.io/docs)
-- **AWS Documentation**: [AWS Docs](https://docs.aws.amazon.com/)
-- **Azure Documentation**: [Azure Docs](https://docs.microsoft.com/azure/)
-- **GCP Documentation**: [GCP Docs](https://cloud.google.com/docs)
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to contribute to this project.
-
----
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🔒 Security
-
-See [SECURITY.md](SECURITY.md) for details on reporting security issues.
+This project is licensed under the MIT-0 License. See [LICENSE](LICENSE) for details.

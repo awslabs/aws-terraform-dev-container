@@ -1,6 +1,6 @@
-## Make
+# Make targets
 
-This repository's `Makefile` is intentionally tiny — it inherits its targets from the [aws-code-habits](https://github.com/awslabs/aws-code-habits) submodule mounted under `habits/`:
+The `Makefile` in this repository is small. It inherits its targets from the [aws-code-habits](https://github.com/awslabs/aws-code-habits) submodule mounted under `habits/`:
 
 ```makefile
 export WORKSPACE = $(shell pwd)
@@ -11,60 +11,116 @@ include $(HABITS)/lib/make/Makefile
 include $(HABITS)/lib/make/*/Makefile
 ```
 
-That means **the submodule must be initialized before any `make` target will work**. If you cloned without `--recurse-submodules`, run:
+You must initialize the submodule before any `make` target runs. If you cloned without `--recurse-submodules`, run:
 
 ```bash
 git submodule update --init --recursive
 ```
 
-To list every available target after init, run:
+To list the available targets, run:
 
 ```bash
 make help
 ```
 
-### Targets used by this repository
+## Available targets
 
-The targets below are the ones this repository's CI (`.github/workflows/test.yml` and `.github/workflows/hygiene.yml`) actually exercises. They are the demonstrably-working surface area — anything else `make help` reports comes from `aws-code-habits` and may or may not be relevant here.
+The list below is the output of `make help` after the submodule is initialized. The targets come from `aws-code-habits`. This repository's continuous integration (CI) exercises only a subset of them — the install and `doc/build` targets used in `.github/workflows/test.yml` and `.github/workflows/hygiene.yml`. Treat the rest as best-effort.
 
-#### Bootstrapping a host (used by `test.yml`)
+```text
+Available targets:
 
-| Target | What it does |
-|---|---|
-| `ansible/install` | Install Ansible on the host (used to drive the rest of the install playbooks). |
-| `ansible/playbooks/ubuntu/install` | Run the bundled Ubuntu setup playbook (common packages, build deps). |
+  aws/cfn-lint/install                Install AWS CloudFormation Linter
+  aws/cli/install                     Install AWS Command Line Interface v2
+  aws/cli/version                     Display AWS CLI version
+  aws/cloudformation/create-change-set Creates a list of changes that will be applied to a stack so that you can review the changes before executing them.
+  aws/cloudformation/create-change-set-without-parameters Creates a list of changes that will be applied to a stack so that you can review the changes before executing them.
+  aws/cloudformation/create-folder-structure Create a folder structure for CloudFormation projects
+  aws/cloudformation/create-parameters Copy a CloudFormation parameters to be used as example
+  aws/cloudformation/create-project   Create a CloudFormation project structure
+  aws/cloudformation/create/service-linked-role Creates  an  IAM  role that is linked to a specific Amazon Elasticsearch service.
+  aws/cloudformation/create-stack     Creates a stack as specified in the template.
+  aws/cloudformation/create-stack-without-parameters Creates a stack as specified in the template. (don't pass --parameters flag)
+  aws/cloudformation/create-template-yaml Copy a CloudFormation template to be used as example
+  aws/cloudformation/delete-change-set Delete latest change-set created
+  aws/cloudformation/delete/service-linked-role Deletes  an  IAM  role that is linked to a specific Amazon Web Services service.
+  aws/cloudformation/delete-stack     Delete CloudFormation Stack
+  aws/cloudformation/describe-stack-events Returns  all  stack  related  events  for  a specified stack in reverse chronological order.
+  aws/cloudformation/describe-stack   Returns  the  description for the specified stack; if no stack name was specified, then it returns the description for all the stacks created.
+  aws/cloudformation/detect-stack-drift Detects  whether a stack's actual configuration differs, or has drifted , from it's expected configuration, as defined in  the  stack  template and  any  values specified as template parameters.
+  aws/cloudformation/estimate-template-cost Returns  the  estimated monthly cost of a template
+  aws/cloudformation/execute-change-set Execute latest change-set
+  aws/cloudformation/hygiene          Execute CFN Lint and pre-commit rules
+  aws/cloudformation/latest-change-set Display latest change-set
+  aws/codeartifact/login              Login into AWS CodeArtifact
+  aws/ssm/install-plugin              Install AWS SSM plugin
+  aws/ssm/start-session               Start session with AWS Systems Manager Session Manager
+  aws/sso/login                       Login into AWS account and export credentials to ~/.aws/credentials
+  aws/sts/get-caller-identity         Returns  details  about the IAM user or role whose credentials are used to call the operation.
+  checkov/run                         Run Checkov
+  checkov/version                     Display checkov version
+  doc/build                           Builds documentation
+  doc/init                            Initialize documentation
+  docker/prune                        Remove unused images and all stopped containers
+  docker/remove-containers            Remove all Docker containers
+  docker/remove-images                Remove all Docker images
+  docker/remove-volumes               Remove all Docker volumes
+  git/config/init                     Initialize git configuration for project
+  github/actions/init                 Initialize .github/actions directory
+  github/issues/init                  Initialize .github/issues directory
+  github/pull-request/init            Initialize .github/pull-request directory
+  github/workflows/init               Initialize .github/workflows directory
+  gitignore/init                      Create .gitignore file
+  gitignore/install                   Install gitignore
+  gitignore/list                      List all gitignore templates
+  go/install                          Install Golang
+  gomplate/version                    Display Gomplate version
+  go/version                          Display Go version
+  habits/check                        Performs checks
+  habits/init                         Initialize gitignore, documentation, pre-commit, github workflows, issues and pull-request
+  habits/install                      Install Habits dependencies
+  habits/remove                       Uninstall Habits
+  habits/update                       Update Habits
+  help/clean                          Help screen
+  nodejs/install                      Install NodeJS
+  npm/install                         Install NPM
+  pre-commit/hooks/install            Install pre-commit hooks
+  pre-commit/init                     Initialize .pre-commit-config.yaml to working directoy
+  pre-commit/install                  Install pre-commit using Pip3
+  pre-commit/remove                   Remove .pre-commit-config.yaml
+  pre-commit/run                      Execute pre-commit hooks on all files
+  pre-commit/update                   Update pre-commit-config.yaml with the latest version
+  pre-commit/version                  Display pre-commit version
+  python/install                      Install Python 3
+  python/pip/install                  Install Python 3 Pip
+  python/version                      Display Python & Pip version
+  python/virtualenv/init              Initialize a Python 3 virtualenv in the current directory
+  python/virtualenv/install           Install Python 3 virtualenv
+  python/virtualenv/remove            Remove Python 3 virtualenv in the current directory
+  terraform/apply                     Builds or changes infrastructure according to Terraform configuration files in DIR
+  terraform/clean                     Remove temporary files and directories
+  terraform/destroy                   Destroy Terraform-managed infrastructure.
+  terraform-docs/build                Build doc/terraform-docs.md with Terraform Docs
+  terraform-docs/version              Display Terraform Docs version
+  terraform/fmt                       Check if the input is formatted. Exit status will be 0 if all input is properly formatted and non-zero otherwise.
+  terraform/init/backend              Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+  terraform/init                      Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+  terraform/install                   Install Terraform latest version
+  terraform/plan                      Generates an execution plan for Terraform
+  terraform/validate                  Validate the configuration files in a directory, referring only to the configuration and not accessing any remote services such as remote state, provider APIs, etc.
+  terraform/version                   Display Terraform version
+  terrascan/run                       Run Terrascan
+  terrascan/version                   Display Terrascan version
+  tflint/init/force                   Init AWS TFLINT, overwrite current configuration
+  tflint/init                         Init AWS TFLINT
+  tflint/run                          Run TFLINT
+  tflint/version                      Display TFLINT version
+  tfsec/run                           Run TFSEC
+  tfsec/version                       Display TFSEC version
+  tfswitch/run                        Execute tfswitch
+  tfswitch/version                    Display tfswitch version
+  ubuntu/install                      Install most common packages
+  ubuntu/update                       Update and upgrade Ubuntu packages
+```
 
-#### Cloud CLIs
-
-| Target | What it does |
-|---|---|
-| `aws/cli/install/v2` | Install AWS CLI v2. |
-| `aws/cli/autocomplete` | Wire up shell autocompletion for the AWS CLI. |
-
-#### Terraform & ecosystem
-
-| Target | What it does |
-|---|---|
-| `terraform/install` | Install the Terraform CLI. |
-| `terraform-docs/install` | Install `terraform-docs` (version pinned via `TERRAFORM_DOCS_VERSION` in `tools.env`). |
-| `tflint/install` | Install `tflint` plus the AWS ruleset (version pinned via `TFLINT_AWS_RULESET_VERSION`). |
-| `tfsec/install` | Install `tfsec` (version pinned via `TFSEC_VERSION`). |
-| `terrascan/install` | Install `terrascan` (version pinned via `TERRASCAN_VERSION`). |
-| `checkov/install` | Install `checkov` (Python-based static analysis for IaC). |
-| `tfswitch/install` | Install `tfswitch` for switching Terraform versions. |
-
-> **Note**: `tfswitch/install` is scheduled to be replaced by [`tenv`](https://github.com/tofuutils/tenv) (see issue #12). New work should not depend on `tfswitch` long-term.
-
-#### Documentation
-
-| Target | What it does |
-|---|---|
-| `doc/build` | Regenerate `doc/`-rooted documentation (used by the `doc-hygiene` CI job, which fails the build if the result differs from what was committed). |
-
-### Other targets
-
-`aws-code-habits` ships many additional targets covering pre-commit, Python, Node.js, Go, Docker hygiene, and gitignore management. They are not exercised by this repository's CI, so they are not documented here. Run `make help` after the submodule is initialized for the full list, and treat anything outside the table above as best-effort.
-
-### Updating this document
-
-This file is hand-maintained. If you add a new target invocation to `.github/workflows/`, please add a row to the appropriate table above.
+> **Note:** This list is generated from the `aws-code-habits` submodule. When the submodule updates, the available targets can change. Run `make help` for the current list.
