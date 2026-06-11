@@ -1,64 +1,81 @@
-# Terraform Development Environment Usage Guide
+# Usage
 
-This document provides detailed usage instructions for the Terraform Development Environment.
+This guide describes how to work in the Terraform Development Environment dev container: opening it, running Terraform, authenticating to cloud providers, using pre-commit hooks and VS Code tasks, and resolving common problems. For an overview of the container and its tools, see [README.md](README.md).
 
-## Table of Contents
+## Open the dev container
 
-- [Getting Started](#getting-started)
-- [Working with Terraform](#working-with-terraform)
-- [Cloud Provider Authentication](#cloud-provider-authentication)
-- [Using Pre-commit Hooks](#using-pre-commit-hooks)
-- [VS Code Tasks and Extensions](#vs-code-tasks-and-extensions)
-- [Advanced Configuration](#advanced-configuration)
-- [Best Practices](#best-practices)
-- [Troubleshooting](#troubleshooting)
+1. Open the project folder in Visual Studio Code.
+2. When VS Code prompts you, select **Reopen in Container**. You can also open the command palette (`F1`) and run **Dev Containers: Reopen in Container**.
+3. Wait for the container to build and start.
 
-## Getting Started
+When the container starts, the post-start command clears the terminal and prints the installed tool versions, the working directory, and hints for authenticating to each cloud provider.
 
-### Opening the Dev Container
+The following diagram shows how the running container is wired to the host. Credential directories are bind-mounted from the host, and the Terraform plugin cache is a named Docker volume:
 
-1. Open VS Code in the project directory
-2. Click on the green icon in the bottom-left corner
-3. Select "Reopen in Container"
-4. Wait for the container to build and initialize
+```mermaid
+flowchart TB
+    subgraph Host["Host"]
+        Creds["~/.aws, ~/.azure, ~/.config/gcloud, ~/.ssh"]
+        Cache["terraform-cache volume"]
+    end
 
-### Initial Setup
+    subgraph Container["Dev container (Ubuntu 22.04)"]
+        Tools["Terraform + cloud CLIs + linting, security, and test tools"]
+        Scripts["aws-auth.sh, azure-auth.sh, gcp-auth.sh"]
+        Env["terraform.env environment variables"]
+    end
 
-Once the container is running, you'll see a welcome message with information about the installed tools and their versions. The following steps are recommended for initial setup:
+    Creds -->|bind mount| Container
+    Cache -->|TF_PLUGIN_CACHE_DIR| Container
+    Scripts -->|read and write credentials| Creds
+    Env --> Tools
+    Tools -->|terraform init, plan, apply| Cloud["AWS, Azure, GCP"]
+```
 
-1. Configure cloud provider authentication (see [Cloud Provider Authentication](#cloud-provider-authentication))
-2. Install pre-commit hooks: `pre-commit install`
-3. Initialize Terraform: `terraform init`
+After the container is running, complete the initial setup:
 
-## Working with Terraform
+1. Authenticate to a cloud provider (see [Authenticate to a cloud provider](#authenticate-to-a-cloud-provider)).
+2. Install the pre-commit hooks:
 
-### Basic Terraform Workflow
+   ```bash
+   pre-commit install
+   ```
+
+3. Initialize Terraform:
+
+   ```bash
+   terraform init
+   ```
+
+## Work with Terraform
+
+### Basic workflow
 
 ```bash
-# Initialize Terraform
+# Initialize the working directory
 terraform init
 
-# Format Terraform code
+# Format configuration files
 terraform fmt -recursive
 
-# Validate Terraform code
+# Validate the configuration
 terraform validate
 
-# Plan changes
+# Generate an execution plan
 terraform plan -out=tfplan
 
-# Apply changes
+# Apply the planned changes
 terraform apply tfplan
 
-# Destroy infrastructure
+# Destroy managed infrastructure
 terraform destroy
 ```
 
-### Using Terraform with Multiple Environments
+### Manage multiple environments
 
-You can use Terraform workspaces or directory structures to manage multiple environments:
+You manage multiple environments with Terraform workspaces or with a directory structure.
 
-#### Using Workspaces
+To use workspaces:
 
 ```bash
 # Create workspaces
@@ -72,13 +89,13 @@ terraform workspace list
 # Select a workspace
 terraform workspace select dev
 
-# Run Terraform commands in the selected workspace
+# Run commands in the selected workspace
 terraform plan -out=tfplan
 ```
 
-#### Using Directory Structure
+To use a directory structure:
 
-```
+```text
 project/
 ├── environments/
 │   ├── dev/
@@ -99,49 +116,51 @@ project/
     └── storage/
 ```
 
-### Using Terraform with Terragrunt
+### Use Terragrunt
 
-The environment includes Terragrunt for managing Terraform configurations:
+The container includes Terragrunt for managing Terraform configurations:
 
 ```bash
-# Initialize Terragrunt
+# Initialize
 terragrunt init
 
-# Plan changes
+# Plan
 terragrunt plan -out=tfplan
 
-# Apply changes
+# Apply
 terragrunt apply tfplan
 ```
 
-## Cloud Provider Authentication
+## Authenticate to a cloud provider
 
-### AWS Authentication
+The container includes a helper script for each cloud provider under `.devcontainer/scripts/`. Each script accepts `--help` to print its options.
+
+### AWS
 
 ```bash
-# Basic authentication
+# Interactive login
 .devcontainer/scripts/aws-auth.sh
 
-# Authentication with profile
+# Use a named profile
 .devcontainer/scripts/aws-auth.sh --profile myprofile
 
-# Authentication with region
+# Set a region
 .devcontainer/scripts/aws-auth.sh --region us-west-2
 
-# Authentication with SSO
+# Use AWS IAM Identity Center (SSO)
 .devcontainer/scripts/aws-auth.sh --sso
 ```
 
-### Azure Authentication
+### Azure
 
 ```bash
-# Basic authentication (interactive)
+# Interactive login
 .devcontainer/scripts/azure-auth.sh
 
-# Authentication with subscription
+# Set a subscription
 .devcontainer/scripts/azure-auth.sh --subscription 00000000-0000-0000-0000-000000000000
 
-# Authentication with service principal
+# Use a service principal
 .devcontainer/scripts/azure-auth.sh \
   --service-principal \
   --tenant 00000000-0000-0000-0000-000000000000 \
@@ -149,120 +168,106 @@ terragrunt apply tfplan
   --client-secret "your-client-secret"
 ```
 
-### GCP Authentication
+### GCP
 
 ```bash
-# Basic authentication (interactive)
+# Interactive login
 .devcontainer/scripts/gcp-auth.sh
 
-# Authentication with project
+# Set a project
 .devcontainer/scripts/gcp-auth.sh --project my-project-id
 
-# Authentication with service account key
+# Use a service account key
 .devcontainer/scripts/gcp-auth.sh --credentials /path/to/service-account-key.json
 ```
 
-## Using Pre-commit Hooks
+## Use pre-commit hooks
 
-### Installing Pre-commit Hooks
+Install the hooks in your repository:
 
 ```bash
 pre-commit install
 ```
 
-### Running Pre-commit Hooks Manually
+Run the hooks manually:
 
 ```bash
 # Run on all files
 pre-commit run --all-files
 
-# Run specific hook
+# Run a single hook
 pre-commit run terraform_fmt --all-files
 ```
 
-### Available Pre-commit Hooks
+The hooks are defined in `.pre-commit-config.yaml`. To see the exact set of hooks and their versions, read that file. The hooks cover Terraform formatting, validation, and documentation; static analysis with `tflint`, `tfsec`, and `checkov`; shell script checks; and secret detection.
 
-- `terraform_fmt`: Format Terraform files
-- `terraform_validate`: Validate Terraform files
-- `terraform_docs`: Generate documentation for Terraform modules
-- `terraform_tflint`: Run TFLint
-- `terraform_tfsec`: Run TFSec
-- `terraform_checkov`: Run Checkov
-- `shellcheck`: Check shell scripts
-- `gitleaks`: Detect secrets in code
+## Use VS Code tasks
 
-## VS Code Tasks and Extensions
+To run a task:
 
-### Running VS Code Tasks
+1. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS).
+2. Select **Tasks: Run Task**.
+3. Choose a task.
 
-1. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
-2. Select "Tasks: Run Task"
-3. Choose the task you want to run
+The container defines these tasks in `.vscode/tasks.json`:
 
-### Available VS Code Tasks
+| Task | Command |
+| --- | --- |
+| Terraform: Init | `terraform init` |
+| Terraform: Plan | `terraform plan -out=tfplan` |
+| Terraform: Apply | `terraform apply tfplan` |
+| Terraform: Apply (Auto-approve) | `terraform apply -auto-approve` |
+| Terraform: Destroy | `terraform destroy` |
+| Terraform: Validate | `terraform validate` |
+| Terraform: Format | `terraform fmt -recursive` |
+| Terraform: Clean | Remove `.terraform/`, the lock file, state files, and `tfplan` |
+| TFLint: Run | `tflint` |
+| TFSec: Run | `tfsec .` |
+| Checkov: Run | `checkov -d .` |
+| Pre-commit: Run All Hooks | `pre-commit run --all-files` |
+| AWS: Login | `.devcontainer/scripts/aws-auth.sh` |
+| AWS: Login with SSO | `.devcontainer/scripts/aws-auth.sh --sso` |
+| Azure: Login | `.devcontainer/scripts/azure-auth.sh` |
+| GCP: Login | `.devcontainer/scripts/gcp-auth.sh` |
 
-- **Terraform: Init** - Initialize a Terraform working directory
-- **Terraform: Plan** - Generate and show an execution plan
-- **Terraform: Apply** - Build or change infrastructure
-- **Terraform: Destroy** - Destroy Terraform-managed infrastructure
-- **Terraform: Validate** - Validate the Terraform files
-- **Terraform: Format** - Rewrite Terraform configuration files to canonical format
-- **TFLint: Run** - Run TFLint for static analysis
-- **TFSec: Run** - Run TFSec for security scanning
-- **Checkov: Run** - Run Checkov for compliance checks
-- **Pre-commit: Run All Hooks** - Run all pre-commit hooks
-- **AWS: Login** - Login to AWS
-- **Azure: Login** - Login to Azure
-- **GCP: Login** - Login to GCP
+The installed VS Code extensions are listed in the `customizations.vscode.extensions` block of `.devcontainer/devcontainer.json`. They include HashiCorp Terraform, Azure Terraform, Terraform doc snippets, YAML support, GitLens, Git History, Git Graph, the Azure Tools pack, the Remote Containers and Remote SSH extensions, Code Spell Checker, Markdown All in One, markdownlint, Prettier, ShellCheck, and the Python and Pylance extensions.
 
-### Installed VS Code Extensions
+## Advanced configuration
 
-- HashiCorp Terraform
-- Azure Terraform
-- Terraform doc snippets
-- YAML support
-- Git integration (GitLens, Git Graph, Git History)
-- Remote Containers
-- Code Spell Checker
-- Markdown All in One
-- And more...
+### Edit environment variables
 
-## Advanced Configuration
-
-### Customizing Environment Variables
-
-Edit `.devcontainer/config/terraform.env` to customize environment variables:
+Edit `.devcontainer/config/terraform.env` to change environment variables. The post-start command sources this file when the container starts. The shipped file sets the Terraform variables and leaves the cloud-provider variables commented out:
 
 ```bash
 # Terraform Configuration
 TF_PLUGIN_CACHE_DIR=/home/vscode/.terraform.d/plugin-cache
-TF_CLI_ARGS_init="--upgrade"
-TF_CLI_ARGS_plan="-compact-warnings"
-TF_CLI_ARGS_apply="-compact-warnings"
+TF_CLI_ARGS_init=""
+TF_CLI_ARGS_plan=""
+TF_CLI_ARGS_apply=""
+# Uncomment for debug logging
 # TF_LOG=DEBUG
 
 # AWS Provider Configuration
-AWS_PROFILE=default
-AWS_REGION=us-west-2
-AWS_SDK_LOAD_CONFIG=1
+# AWS_PROFILE=default
+# AWS_REGION=us-west-2
+# AWS_SDK_LOAD_CONFIG=1
 
 # Azure Provider Configuration
-ARM_SUBSCRIPTION_ID=your-subscription-id
-ARM_TENANT_ID=your-tenant-id
-ARM_CLIENT_ID=your-client-id
-ARM_CLIENT_SECRET=your-client-secret
+# ARM_SUBSCRIPTION_ID=your-subscription-id
+# ARM_TENANT_ID=your-tenant-id
+# ARM_CLIENT_ID=your-client-id
+# ARM_CLIENT_SECRET=your-client-secret
 
 # GCP Provider Configuration
-GOOGLE_APPLICATION_CREDENTIALS=/home/vscode/.config/gcloud/application_default_credentials.json
-CLOUDSDK_CORE_PROJECT=your-project-id
+# GOOGLE_APPLICATION_CREDENTIALS=/home/vscode/.config/gcloud/application_default_credentials.json
+# CLOUDSDK_CORE_PROJECT=your-project-id
 ```
 
-### Customizing TFLint Rules
+### Customize TFLint rules
 
-Edit `.tflint.hcl` to customize TFLint rules:
+Edit `.tflint.hcl` to change TFLint rules:
 
 ```hcl
-# Enable or disable specific rules
 rule "terraform_deprecated_interpolation" {
   enabled = true
 }
@@ -271,111 +276,95 @@ rule "terraform_unused_declarations" {
   enabled = true
 }
 
-# Add custom rules
 rule "terraform_naming_convention" {
   enabled = true
-  format = "snake_case"
+  format  = "snake_case"
 }
 ```
 
-### Adding Custom Tools
+### Add a tool
 
-To add custom tools, create a new script in `.devcontainer/library-scripts/` and update the Dockerfile:
+To add a tool, create a script under `.devcontainer/library-scripts/` and call it from the Dockerfile:
 
 ```dockerfile
-# Install custom tool
 COPY library-scripts/custom-tool.sh /tmp/library-scripts/
 RUN chmod +x /tmp/library-scripts/custom-tool.sh
 RUN /tmp/library-scripts/custom-tool.sh
 ```
 
-## Best Practices
+## Best practices
 
-### Security Best Practices
+### Security
 
-1. **Never commit credentials**: Use environment variables or credential helpers
-2. **Regularly rotate credentials**: Especially for service accounts
-3. **Use least privilege**: Grant only the permissions needed
-4. **Enable MFA**: Use multi-factor authentication for cloud providers
-5. **Scan for secrets**: Use pre-commit hooks to detect secrets
+1. Never commit credentials. Use environment variables or credential helpers.
+2. Rotate credentials regularly, especially for service accounts.
+3. Grant only the permissions that are needed.
+4. Enable multi-factor authentication for cloud providers.
+5. Run the secret-detection pre-commit hook before you commit.
 
-### Terraform Best Practices
+### Terraform
 
-1. **Use modules**: Organize code into reusable modules
-2. **Version pinning**: Pin provider and module versions
-3. **Use remote state**: Store state in a remote backend
-4. **Use variables**: Parameterize your configurations
-5. **Document your code**: Use terraform-docs to generate documentation
+1. Organize code into reusable modules.
+2. Pin provider and module versions.
+3. Store state in a remote backend.
+4. Parameterize configurations with variables.
+5. Generate documentation with `terraform-docs`.
 
-### Development Workflow Best Practices
+### Development workflow
 
-1. **Use branches**: Create feature branches for changes
-2. **Run pre-commit hooks**: Validate code before committing
-3. **Review plans**: Always review Terraform plans before applying
-4. **Use workspaces or environments**: Separate development, staging, and production
-5. **Automate testing**: Use automated testing for Terraform code
+1. Create a feature branch for each change.
+2. Run pre-commit hooks before you commit.
+3. Review the plan before you apply.
+4. Separate development, staging, and production with workspaces or directories.
+5. Automate testing of your Terraform code.
 
 ## Troubleshooting
 
-### Common Issues and Solutions
+### Authentication fails
 
-#### Authentication Issues
-
-**Issue**: Unable to authenticate with cloud provider
-**Solution**: Check your credentials and ensure they are properly configured
+Confirm your credentials for each provider:
 
 ```bash
-# Check AWS credentials
+# AWS
 aws sts get-caller-identity
 
-# Check Azure credentials
+# Azure
 az account show
 
-# Check GCP credentials
+# GCP
 gcloud auth list
 ```
 
-#### Terraform Issues
+### `terraform init` fails
 
-**Issue**: Terraform init fails
-**Solution**: Check your backend configuration and credentials
+Check your backend configuration and credentials. Run with debug logging:
 
 ```bash
-# Initialize with debug logging
 TF_LOG=DEBUG terraform init
 ```
 
-**Issue**: Terraform plan/apply fails
-**Solution**: Check your provider configuration and credentials
+### `terraform plan` or `terraform apply` fails
+
+Check your provider configuration and credentials. Run with debug logging:
 
 ```bash
-# Plan with debug logging
 TF_LOG=DEBUG terraform plan
 ```
 
-#### Container Issues
+### The container fails to build
 
-**Issue**: Container fails to build
-**Solution**: Check Docker logs and ensure Docker has enough resources
+Check the Docker logs and confirm Docker has enough memory allocated:
 
 ```bash
-# Check Docker logs
 docker logs <container-id>
 ```
 
-**Issue**: Volume mounts not working
-**Solution**: Check permissions and ensure the directories exist on the host
+### Volume mounts are empty
+
+Confirm the source directories exist on the host and have the correct permissions:
 
 ```bash
-# Check permissions
 ls -la ~/.aws ~/.azure ~/.config/gcloud ~/.ssh
 ```
 
-### Getting Help
-
-If you encounter issues not covered in this guide, please:
-
-1. Check the documentation for the specific tool
-2. Search for the error message online
-3. Check the GitHub issues for this project
-4. Reach out to the community for help
+If a problem is not covered here, check the documentation for the specific tool and the [GitHub issues](https://github.com/awslabs/aws-terraform-dev-container/issues) for this project.
