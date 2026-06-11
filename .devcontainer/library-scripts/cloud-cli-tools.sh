@@ -61,7 +61,8 @@ j+c7Kg92pDx2uQ==
 AWS_CLI_PGP_KEY
 
 # Verify the signature in an isolated GNUPGHOME so we don't pollute the user's keyring
-mkdir -m 700 -p /tmp/aws-cli-gnupghome
+mkdir -p /tmp/aws-cli-gnupghome
+chmod 700 /tmp/aws-cli-gnupghome
 GNUPGHOME=/tmp/aws-cli-gnupghome gpg --batch --import /tmp/aws-cli-pgp.key
 GNUPGHOME=/tmp/aws-cli-gnupghome gpg --batch --verify /tmp/awscliv2.sig /tmp/awscliv2.zip
 
