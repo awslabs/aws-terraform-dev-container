@@ -23,10 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
-- README now correctly describes Azure CLI / gcloud / pre-commit as OS-provided / pip-installed (no longer "Latest").
-- README "Getting Started" now instructs users to clone with `--recurse-submodules` (the Makefile depends on `habits/`).
+- README gains Recommended workflow, Advanced usage, Use cases, and Productivity benefits sections (layered on top of the current README structure).
 - SECURITY.md now points to AWS Security's vulnerability reporting page, aligned with CONTRIBUTING.md.
-- Replaced `Makefile.md` with content relevant to this repository.
 
 ## [1.2.3] - 2025-06-11
 
