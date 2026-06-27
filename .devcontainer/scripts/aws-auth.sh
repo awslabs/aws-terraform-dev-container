@@ -68,7 +68,7 @@ fi
 if [ "$USE_SSO" = true ]; then
     echo "Authenticating with AWS SSO..."
     aws sso login
-    
+
     # Verify authentication
     echo "Verifying authentication..."
     aws sts get-caller-identity

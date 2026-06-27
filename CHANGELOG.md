@@ -5,6 +5,27 @@ All notable changes to the Terraform Development Environment will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+
+- Added SHA256 checksum verification for all binary downloads in the container build (terraform, terraform-docs, tfsec, terrascan, tflint and rulesets, terragrunt, infracost, Go).
+- Replaced `curl | sudo bash` patterns for Azure CLI and Google Cloud SDK with hardened apt-repo installations using `signed-by=` keyrings.
+- Pinned all third-party GitHub Actions to commit SHAs in CI workflows.
+- Pinned the base devcontainer image from the floating `0-${VARIANT}` tag to a specific minor version.
+- Pinned the `ghcr.io/devcontainers/features/git` feature from `latest` to `os-provided`.
+- Hardened install scripts to `set -euo pipefail`.
+
+### Fixed
+
+- `scripts/init.sh` no longer fails when run outside a git repository (issue #10) — falls back to a plain clone of `aws-code-habits` instead of a submodule.
+- `scripts/init.sh` now uses HTTPS for cloning, removing the implicit SSH-key requirement.
+
+### Documentation
+
+- README gains Recommended workflow, Advanced usage, Use cases, and Productivity benefits sections (layered on top of the current README structure).
+- SECURITY.md now points to AWS Security's vulnerability reporting page, aligned with CONTRIBUTING.md.
+
 ## [1.2.3] - 2025-06-11
 
 ### Added

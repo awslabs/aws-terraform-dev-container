@@ -208,6 +208,87 @@ For the original design plan, see [terraform-devcontainer-plan.md](terraform-dev
 - Cloud-provider CLIs (Azure CLI, Google Cloud SDK) are installed from their vendors' official apt repositories with `signed-by=` keyrings.
 - Pre-commit hooks run security scanning and secret detection before code is committed.
 
+## Recommended workflow
+
+A typical iteration inside the container:
+
+1. Initialize your project — run `terraform init` (or the **Terraform: Init** task).
+2. Install the pre-commit hooks — `pre-commit install` — so validation runs automatically.
+3. Develop iteratively, making small changes and validating frequently.
+4. Validate changes with the linting, security-scanning, and validation tasks.
+5. Keep documentation current with `terraform-docs`.
+6. Estimate costs with Infracost before you apply.
+7. Test infrastructure behavior with Terratest.
+8. Review, then apply your changes to the target environment.
+
+### Suggested project structure
+
+The tools in this container work well with a per-environment, module-oriented layout:
+
+```text
+project/
+├── environments/
+│   ├── dev/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── terraform.tfvars
+│   ├── staging/
+│   │   └── ...
+│   └── prod/
+│       └── ...
+├── modules/
+│   ├── networking/
+│   ├── compute/
+│   └── storage/
+└── tests/
+    └── ...
+```
+
+This structure promotes code reuse, environment isolation, and easier testing.
+
+## Advanced usage
+
+<details>
+<summary>How the tools fit together, and how to extend the environment</summary>
+
+The bundled tools are intended to be used as a pipeline:
+
+- **Development** — write Terraform in VS Code with syntax highlighting and IntelliSense, keep formatting consistent with `terraform fmt` (via tasks or pre-commit), validate syntax with `terraform validate`, and check best practices with `tflint`.
+- **Security and compliance** — scan with `tfsec`, check compliance with `terrascan` and `checkov`, and detect secrets through the pre-commit hooks.
+- **Testing** — write infrastructure tests with Terratest and validate behavior before deployment.
+- **Deployment** — estimate cost with Infracost, plan with `terraform plan`, apply with `terraform apply`, and manage larger deployments with Terragrunt.
+
+To extend the environment:
+
+- **Add tools** — edit the `.devcontainer/Dockerfile`, add a script under `.devcontainer/library-scripts/`, and add any VS Code extensions in `devcontainer.json`.
+- **Customize for a team** — fork the repository, add team-specific configuration, modules, examples, and pre-commit hooks.
+- **Align with CI/CD** — use the same pinned tools in your pipelines so development and automation stay consistent.
+
+</details>
+
+## Use cases
+
+<details>
+<summary>Who this environment is for</summary>
+
+- **Enterprise infrastructure teams** — standardize environments across large teams, enforce security and compliance through built-in tooling, simplify onboarding, and keep practices consistent across cloud providers.
+- **DevOps engineers** — prototype and test infrastructure changes quickly, validate before production, generate documentation, and estimate cost before deploying.
+- **Cloud architects** — design and test multi-cloud architectures, validate against security best practices, build reusable modules, and document decisions.
+- **Individual developers** — learn Terraform in a pre-configured environment, experiment across providers without complex setup, and follow best practices from the start.
+
+</details>
+
+## Productivity benefits
+
+<details>
+<summary>Why teams adopt a shared dev container</summary>
+
+- **Time savings** — removes hours of per-developer setup, eliminates ongoing tool-maintenance overhead, and shortens onboarding from days to hours.
+- **Quality** — every change is validated, security issues are caught before production, documentation stays current, and infrastructure is tested.
+- **Collaboration** — everyone runs the same tool versions, results are reproducible (no "works on my machine"), and a common toolset makes knowledge sharing easier across Windows, macOS, and Linux.
+
+</details>
+
 ## Troubleshooting
 
 | Issue | Resolution |

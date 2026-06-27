@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 # This script installs common utilities and dependencies
 

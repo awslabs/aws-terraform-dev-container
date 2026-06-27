@@ -8,6 +8,7 @@ set -e
 if [ -f "/home/vscode/.devcontainer/config/terraform.env" ]; then
     echo "Loading Terraform environment variables..."
     set -a
+    # shellcheck source=/dev/null  # generated at runtime; absent during static analysis
     source "/home/vscode/.devcontainer/config/terraform.env"
     set +a
 fi
@@ -17,7 +18,7 @@ chmod +x /home/vscode/.devcontainer/scripts/*.sh
 
 # Display welcome message
 clear
-printf "\e[0;32mTerraform Development Environment: $(basename $PWD)\e[0m\n\n"
+printf "\e[0;32mTerraform Development Environment: %s\e[0m\n\n" "$(basename "$PWD")"
 
 # Display installed tools and versions
 echo "=== Installed Tools ==="
