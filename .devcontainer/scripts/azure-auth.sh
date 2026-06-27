@@ -83,16 +83,16 @@ if [ "$USE_SP" = true ]; then
         echo "Error: Service principal authentication requires --client-id and --client-secret"
         exit 1
     fi
-    
+
     export ARM_CLIENT_ID="$CLIENT_ID"
     export ARM_CLIENT_SECRET="$CLIENT_SECRET"
-    
+
     echo "Authenticating with Azure service principal..."
     az login --service-principal --username "$CLIENT_ID" --password "$CLIENT_SECRET" --tenant "$TENANT_ID"
 else
     echo "Authenticating with Azure interactive login..."
     az login
-    
+
     # Set subscription if provided
     if [ -n "$SUBSCRIPTION_ID" ]; then
         az account set --subscription "$SUBSCRIPTION_ID"

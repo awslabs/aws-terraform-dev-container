@@ -196,7 +196,10 @@ if ! command -v go &> /dev/null; then
     curl -fsSL -o /tmp/go.tar.gz "https://golang.org/dl/go${GO_VERSION}.linux-${TFDOCS_ARCH}.tar.gz"
     verify_sha256 /tmp/go.tar.gz "${GO_SHA256}"
     sudo tar -C /usr/local -xzf /tmp/go.tar.gz
+    # Write $PATH/$HOME verbatim so they expand at shell startup, not now.
+    # shellcheck disable=SC2016
     echo 'export PATH=$PATH:/usr/local/go/bin' >> /home/vscode/.bashrc
+    # shellcheck disable=SC2016
     echo 'export PATH=$PATH:$HOME/go/bin' >> /home/vscode/.bashrc
 fi
 

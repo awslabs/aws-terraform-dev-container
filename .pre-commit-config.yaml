@@ -11,7 +11,15 @@ repos:
       # Check for files that would conflict in case-insensitive filesystems
       - id: check-case-conflict
       # This hook checks json files for parseable syntax.
+      # devcontainer.json and .vscode/settings.json are JSONC (comments are
+      # valid per the VS Code / Dev Container spec); the stdlib json parser
+      # this hook uses cannot read them, so exclude them here.
       - id: check-json
+        exclude: |
+          (?x)^(
+            \.devcontainer/devcontainer\.json|
+            \.vscode/settings\.json
+          )$
       # Check for files that contain merge conflict strings.
       - id: check-merge-conflict
       # Checks for symlinks which do not point to anything.
